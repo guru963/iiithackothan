@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoPack Pro - AI-Powered Sustainable Packing</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* ========== COLOR PALETTE ========== */
+        :root {
+            --primary-green: #2e8b57;       /* Sea Green */
+            --deep-green: #1b5e20;          /* Forest Green */
+            --leaf-green: #3a5f0b;          /* Leafy Green */
+            --forest-green: #228B22;        /* Forest Green */
+            --mint-green: #98ff98;         /* Light Mint */
+            --light-green: #e8f5e9;         /* Very Pale Green */
+            --earth-brown: #6d4c41;         /* Earthy Brown */
+            --sand: #d7ccc8;                /* Sandy Beige */
+            --sky-blue: #87CEEB;            /* Sky Blue */
+            --text-dark: #263238;           /* Dark Gray */
+            --text-light: #f5f5f5;          /* Light Gray */
+        }
+    
+        /* ========== BASE STYLES ========== */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+        }
+    
+        body {
+            background-color: #f9f9f7;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" opacity="0.03"><path d="M30,15 Q50,0 70,15 Q90,30 70,50 Q50,70 30,50 Q10,30 30,15 Z" fill="%23228B22"/></svg>');
+            background-size: 180px;
+        }
+    
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+    
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            position: relative;
+            color: var(--deep-green);
+        }
+    
+        /* ========== HEADER STYLES ========== */
+        header {
+            text-align: center;
+            padding: 5px 0;
+            background: linear-gradient(135deg, var(--primary-green), var(--leaf-green));
+            border-radius: 16px;
+            color: var(--deep-green);
+            margin-bottom: 40px;
+            box-shadow: 0 12px 35px rgba(46, 139, 87, 0.25);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.2);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="150" height="150" viewBox="0 0 150 150" opacity="0.08"><path d="M40,20 Q60,5 80,20 Q100,35 80,60 Q60,85 40,60 Q20,35 40,20 Z" fill="%231b5e20"/></svg>');
+            background-size: 180px;
+        }
+    
+        header::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50" opacity="0.08"><path d="M15,10 Q20,5 25,10 Q30,15 25,20 Q20,25 15,20 Q10,15 15,10 Z" fill="%231b5e20"/></svg>');
+            background-size: 100px;
+            z-index: 0;
+        }
+    
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 15px;
+            color: var(--deep-green);
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.3);
+            position: relative;
+            z-index: 1;
+        }
+    
+        .tagline {
+            font-size: 1.3rem;
+            margin-bottom: 25px;
+            font-weight: 500;
+            position: relative;
+            z-index: 1;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.5;
+            color: var(--deep-green);
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.3);
+        }
+    
+        /* ========== MAIN LAYOUT ========== */
+        .wizard-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 35px;
+            margin-bottom: 50px;
+        }
+    
+        @media (max-width: 900px) {
+            .wizard-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    
+        /* ========== INPUT PANEL ========== */
+        .input-panel {
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            border: 1px solid var(--light-green);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" opacity="0.03"><path d="M25,15 Q35,10 45,15 Q55,20 45,30 Q35,40 25,30 Q15,20 25,15 Z" fill="%232e8b57"/></svg>');
+            background-size: 150px;
+        }
+    
+        .input-panel h2 {
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-green);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    
+        .input-panel h2 i {
+            color: var(--primary-green);
+        }
+    
+        .input-group {
+            margin-bottom: 30px;
+            position: relative;
+        }
+    
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: var(--deep-green);
+            font-size: 0.95rem;
+        }
+    
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background-color: #fdfdfd;
+        }
+    
+        input:focus, select:focus, textarea:focus {
+            border-color: var(--primary-green);
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(46, 139, 87, 0.15);
+            background-color: white;
+        }
+    
+        .date-inputs {
+            display: flex;
+            gap: 12px;
+        }
+    
+        /* ========== ACTIVITIES SELECTOR ========== */
+        .activities-select {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 12px;
+            margin-top: 12px;
+        }
+    
+        .activity-option {
+            position: relative;
+        }
+    
+        .activity-option input {
+            position: absolute;
+            opacity: 0;
+        }
+    
+        .activity-option label {
+            display: block;
+            padding: 12px 10px;
+            background: var(--light-green);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            font-weight: 500;
+            margin-bottom: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" opacity="0.08"><path d="M12,5 Q15,3 18,5 Q20,8 18,11 Q15,13 12,11 Q10,8 12,5 Z" fill="%231b5e20"/></svg>');
+        }
+    
+        .activity-option input:checked + label {
+            background: var(--primary-green);
+            color: white;
+            border-color: var(--deep-green);
+            font-weight: 600;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 25 25" opacity="0.2"><path d="M12,5 Q15,3 18,5 Q20,8 18,11 Q15,13 12,11 Q10,8 12,5 Z" fill="white"/></svg>');
+        }
+    
+        /* ========== BUTTON STYLES ========== */
+        button {
+            background: linear-gradient(to right, var(--primary-green), var(--forest-green));
+            color: white;
+            border: none;
+            padding: 16px 30px;
+            border-radius: 35px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(46, 139, 87, 0.3);
+        }
+    
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(27, 94, 32, 0.4);
+        }
+    
+        button:active {
+            transform: translateY(1px);
+        }
+    
+        button::after {
+            content: "🌿";
+            position: absolute;
+            right: 25px;
+            opacity: 0.3;
+            font-size: 22px;
+            transition: all 0.3s;
+        }
+    
+        button:hover::after {
+            transform: rotate(15deg);
+            opacity: 0.5;
+        }
+    
+        /* ========== RESULTS PANEL ========== */
+        .results-panel {
+            background: white;
+            padding: 35px;
+            border-radius: 18px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.06);
+            border: 1px solid var(--light-green);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120" viewBox="0 0 120 120" opacity="0.03"><path d="M25,15 Q35,10 45,15 Q55,20 45,30 Q35,40 25,30 Q15,20 25,15 Z" fill="%23228B22"/></svg>');
+            background-size: 120px;
+        }
+    
+        /* ========== LOADING STATE ========== */
+        .loading {
+            text-align: center;
+            padding: 50px 20px;
+        }
+    
+        .loading h3 {
+            margin-bottom: 20px;
+            color: var(--deep-green);
+        }
+    
+        .loading p {
+            max-width: 500px;
+            margin: 0 auto 20px;
+            color: var(--text-dark);
+        }
+    
+        .spinner {
+            border: 5px solid var(--light-green);
+            border-top: 5px solid var(--primary-green);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 30px auto;
+            position: relative;
+        }
+    
+        .spinner::after {
+            content: "🌱";
+            position: absolute;
+            top: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 24px;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+    
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    
+        @keyframes pulse {
+            0%, 100% { opacity: 0.8; transform: translateX(-50%) scale(1); }
+            50% { opacity: 1; transform: translateX(-50%) scale(1.1); }
+        }
+    
+        /* ========== TRIP SUMMARY ========== */
+        .trip-summary {
+            background: linear-gradient(to right, var(--light-green), rgba(232, 245, 233, 0.7));
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 35px;
+            border: 1px solid rgba(46, 139, 87, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+    
+        .trip-summary::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><path d="M30,15 Q50,0 70,15 Q90,30 70,50 Q50,70 30,50 Q10,30 30,15 Z" fill="%231b5e20"/></svg>');
+            background-size: contain;
+            background-repeat: no-repeat;
+            transform: translate(30px, -30px);
+        }
+    
+        .trip-summary h2 {
+            margin-bottom: 10px;
+            color: var(--deep-green);
+        }
+    
+        .trip-summary p {
+            color: var(--text-dark);
+            font-size: 1.05rem;
+        }
+    
+        /* ========== METRICS CARDS ========== */
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+    
+        .metric-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+            border-top: 5px solid var(--primary-green);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+    
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+    
+        .metric-card::before {
+            content: "🌿";
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            opacity: 0.1;
+            font-size: 50px;
+            z-index: 0;
+        }
+    
+        .metric-card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+    
+        .metric-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin: 15px 0;
+            position: relative;
+            z-index: 1;
+        }
+    
+        .metric-card p {
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            position: relative;
+            z-index: 1;
+        }
+    
+        /* ========== PACKING SECTIONS ========== */
+        .packing-sections {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+    
+        .packing-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+    
+        .packing-section:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        }
+    
+        .section-header {
+            background: linear-gradient(to right, var(--primary-green), var(--leaf-green));
+            color: white;
+            padding: 18px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+    
+        .section-header::after {
+            content: "🍃";
+            position: absolute;
+            right: 18px;
+            opacity: 0.3;
+            font-size: 20px;
+        }
+    
+        .section-items {
+            padding: 20px;
+        }
+    
+        .packing-item {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 0;
+            border-bottom: 1px dashed #e0e0e0;
+        }
+    
+        .packing-item:last-child {
+            border-bottom: none;
+        }
+    
+        /* ========== CUSTOM CHECKBOXES ========== */
+        .item-checkbox {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--primary-green);
+            border-radius: 5px;
+            margin-right: 12px;
+            position: relative;
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-top: 2px;
+            transition: all 0.2s;
+        }
+    
+        .item-checkbox:hover {
+            border-color: var(--deep-green);
+            background-color: var(--light-green);
+        }
+    
+        .item-checkbox:checked {
+            background-color: var(--primary-green);
+        }
+    
+        .item-checkbox:checked::after {
+            content: "✓";
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            font-weight: bold;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+    
+        .item-name {
+            flex: 1;
+            font-weight: 500;
+        }
+    
+        .eco-badge {
+            background: var(--light-green);
+            color: var(--deep-green);
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-left: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            border: 1px solid var(--primary-green);
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" opacity="0.1"><path d="M6,2 Q8,1 10,2 Q11,4 10,6 Q8,7 6,6 Q5,4 6,2 Z" fill="%231b5e20"/></svg>');
+        }
+    
+        .eco-badge i {
+            font-size: 0.8rem;
+        }
+    
+        .item-note {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 8px;
+            padding-left: 32px;
+            line-height: 1.5;
+            font-style: italic;
+        }
+    
+        /* ========== RECOMMENDATIONS ========== */
+        .ai-recommendations {
+            margin-top: 45px;
+            background: #f5f5f5;
+            padding: 30px;
+            border-radius: 12px;
+            border-left: 5px solid var(--primary-green);
+        }
+    
+        .ai-recommendations h3 {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    
+        .ai-recommendations h3 i {
+            color: var(--primary-green);
+        }
+    
+        .recommendation {
+            background: white;
+            padding: 18px;
+            border-radius: 8px;
+            margin-bottom: 18px;
+            position: relative;
+            padding-left: 45px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.03);
+        }
+    
+        .recommendation::before {
+            content: "🍃";
+            position: absolute;
+            left: 15px;
+            top: 18px;
+            opacity: 0.7;
+            font-size: 18px;
+        }
+    
+        .recommendation h4 {
+            color: var(--primary-green);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1rem;
+        }
+    
+        .recommendation p {
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+    
+        /* ========== WARNING SECTION ========== */
+        .warning-section {
+            margin-top: 45px;
+            background: #fff8e1;
+            padding: 30px;
+            border-radius: 12px;
+            border-left: 5px solid #ffa000;
+        }
+    
+        .warning-section h3 {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #e65100;
+        }
+    
+        .warning-section h3 i {
+            color: #e65100;
+        }
+    
+        /* ========== PRINT BUTTON ========== */
+        .print-btn {
+            background: linear-gradient(to right, var(--earth-brown), #5d4037);
+            margin-top: 30px;
+            padding: 16px 30px;
+            border-radius: 35px;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(109, 76, 65, 0.3);
+        }
+    
+        .print-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(109, 76, 65, 0.4);
+        }
+    
+        .print-btn::after {
+            content: "🖨️";
+        }
+    
+        /* ========== RESPONSIVE ADJUSTMENTS ========== */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .tagline {
+                font-size: 1.1rem;
+            }
+            
+            .input-panel, .results-panel {
+                padding: 25px;
+            }
+            
+            .metrics {
+                grid-template-columns: 1fr;
+            }
+            
+            .activities-select {
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            }
+        }
+    
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .date-inputs {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .packing-sections {
+                grid-template-columns: 1fr;
+            }
+        }
+    
+        /* ========== PRINT STYLES ========== */
+        @media print {
+            .input-panel, button {
+                display: none;
+            }
+            
+            .results-panel {
+                box-shadow: none;
+                border: none;
+                padding: 0;
+            }
+            
+            body {
+                background-image: none;
+                font-size: 12pt;
+            }
+            
+            .packing-section {
+                page-break-inside: avoid;
+            }
+            
+            .ai-recommendations, .warning-section {
+                page-break-inside: avoid;
+                background: white !important;
+                border: 1px solid #ddd !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>EcoPack Pro</h1>
+            <p class="tagline">AI-Powered Sustainable Travel Planning</p>
+        </header>
+
+        <div class="wizard-container">
+            <div class="input-panel">
+                <h2>Trip Details</h2>
+                
+                <div class="input-group">
+                    <label for="destinations">Destinations</label>
+                    <input type="text" id="destinations" placeholder="e.g., Bali, Indonesia; Kyoto, Japan">
+                </div>
+                
+                <div class="input-group">
+                    <label for="trip-dates">Travel Dates</label>
+                    <div class="date-inputs">
+                        <input type="date" id="start-date" placeholder="Start date">
+                        <input type="date" id="end-date" placeholder="End date">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label>Trip Type</label>
+                    <select id="trip-type">
+                        <option value="">Select trip type</option>
+                        <option value="vacation">Leisure Vacation</option>
+                        <option value="business">Business Trip</option>
+                        <option value="backpacking">Backpacking</option>
+                        <option value="family">Family Trip</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label>Activities Planned</label>
+                    <div class="activities-select">
+                        <div class="activity-option">
+                            <input type="checkbox" id="hiking" value="hiking">
+                            <label for="hiking">Hiking</label>
+                        </div>
+                        <div class="activity-option">
+                            <input type="checkbox" id="beach" value="beach">
+                            <label for="beach">Beach</label>
+                        </div>
+                        <div class="activity-option">
+                            <input type="checkbox" id="city" value="city">
+                            <label for="city">City</label>
+                        </div>
+                        <div class="activity-option">
+                            <input type="checkbox" id="dining" value="dining">
+                            <label for="dining">Fine Dining</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="eco-focus">Sustainability Focus</label>
+                    <select id="eco-focus">
+                        <option value="balanced">Balanced Approach</option>
+                        <option value="minimalist">Ultra Minimalist</option>
+                        <option value="zero-waste">Zero Waste</option>
+                        <option value="plastic-free">Plastic Free</option>
+                    </select>
+                </div>
+                
+                <div class="input-group">
+                    <label for="notes">Special Requirements</label>
+                    <textarea id="notes" rows="3" placeholder="Allergies, special needs, etc."></textarea>
+                </div>
+                
+                <button id="generate-btn" onclick="generatePackingList()">
+                    <span>Generate Smart Packing List</span>
+                </button>
+            </div>
+
+            <div class="results-panel" id="results-panel">
+                <div id="results-content">
+                    <div class="loading" id="default-message">
+                        <h3>Your Personalized Packing List Awaits</h3>
+                        <p>Fill in your trip details to get AI-powered sustainable packing recommendations tailored to your destinations, activities, and environmental preferences.</p>
+                        <p>🌱 We'll help you pack light, reduce waste, and travel responsibly.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Local knowledge base as fallback
+        const localKnowledgeBase = {
+            "bali": {
+                essentials: [
+                    { name: "Reef-safe sunscreen (SPF 50+)", eco: true, reason: "Required to protect coral reefs" },
+                    { name: "Quick-dry microfiber towel", eco: true, reason: "Humidity makes cotton towels hard to dry" }
+                ],
+                clothing: [
+                    { name: "Lightweight linen shirts (3)", eco: true, reason: "Breathable fabric for tropical climate" },
+                    { name: "Water shoes", eco: false, reason: "Protects feet from coral and hot sand" }
+                ],
+                warnings: [
+                    "Avoid single-use plastics - Bali has strict plastic bag bans",
+                    "Pack mosquito repellent with DEET for jungle areas"
+                ]
+            },
+            "kyoto": {
+                essentials: [
+                    { name: "Collapsible shopping bag", eco: true, reason: "Many shops charge for plastic bags" },
+                    { name: "Comfortable walking shoes", eco: false, reason: "You'll walk 10-15km daily visiting temples" }
+                ],
+                seasonal: {
+                    spring: [
+                        { name: "Allergy medication", eco: false, reason: "Pollen levels extremely high in spring" }
+                    ],
+                    autumn: [
+                        { name: "Light jacket", eco: false, reason: "Cool evenings in November" }
+                    ]
+                }
+            }
+        };
+
+        // Function to detect season from dates
+        function getSeason(startDate) {
+            const date = new Date(startDate);
+            const month = date.getMonth() + 1;
+            
+            if (month >= 3 && month <= 5) return 'spring';
+            if (month >= 6 && month <= 8) return 'summer';
+            if (month >= 9 && month <= 11) return 'autumn';
+            return 'winter';
+        }
+
+        // Function to get climate data (mock - would use API in production)
+        async function getClimateData(destination) {
+            // In a real app, we'd use:
+            // 1. WeatherAPI.com
+            // 2. OpenWeatherMap
+            // 3. ClimaCell API
+            
+            const mockData = {
+                "bali": {
+                    temp: { min: 24, max: 31 },
+                    humidity: 85,
+                    rainfall: "high",
+                    uv: "extreme"
+                },
+                "kyoto": {
+                    temp: { min: 5, max: 15 },
+                    humidity: 60,
+                    rainfall: "moderate",
+                    uv: "moderate"
+                }
+            };
+            
+            return mockData[destination.toLowerCase()] || {
+                temp: { min: 10, max: 25 },
+                humidity: 60,
+                rainfall: "moderate",
+                uv: "moderate"
+            };
+        }
+
+        // Function to generate packing list
+        async function generatePackingList() {
+            const destinations = document.getElementById('destinations').value;
+            const startDate = document.getElementById('start-date').value;
+            const endDate = document.getElementById('end-date').value;
+            const tripType = document.getElementById('trip-type').value;
+            const ecoFocus = document.getElementById('eco-focus').value;
+            const notes = document.getElementById('notes').value;
+            
+            // Get selected activities
+            const activityCheckboxes = document.querySelectorAll('.activities-select input[type="checkbox"]:checked');
+            const activities = Array.from(activityCheckboxes).map(cb => cb.value);
+            
+            if (!destinations || !startDate || !tripType) {
+                alert("Please fill in required fields: Destinations, Dates, and Trip Type");
+                return;
+            }
+            
+            // Show loading state
+            const resultsContent = document.getElementById('results-content');
+            resultsContent.innerHTML = `
+                <div class="loading">
+                    <h3>Creating Your Smart Packing List</h3>
+                    <div class="spinner"></div>
+                    <p>Analyzing destinations, climate, and your eco preferences...</p>
+                </div>
+            `;
+            
+            try {
+                // In production, we would call the Gemini API here with all the trip details
+                // For this demo, we'll use our local knowledge base with some AI-like processing
+                
+                // Process destinations
+                const destinationList = destinations.split(';').map(d => d.trim().toLowerCase());
+                const season = getSeason(startDate);
+                
+                // Get climate data for each destination
+                const climatePromises = destinationList.map(dest => getClimateData(dest));
+                const climateData = await Promise.all(climatePromises);
+                
+                // Generate packing list based on our knowledge base
+                let packingList = {
+                    essentials: [],
+                    clothing: [],
+                    toiletries: [],
+                    gear: [],
+                    documents: [],
+                    warnings: []
+                };
+                
+                // Add destination-specific items
+                destinationList.forEach(dest => {
+                    const destData = localKnowledgeBase[dest];
+                    if (destData) {
+                        if (destData.essentials) packingList.essentials.push(...destData.essentials);
+                        if (destData.clothing) packingList.clothing.push(...destData.clothing);
+                        if (destData.warnings) packingList.warnings.push(...destData.warnings);
+                        
+                        // Add seasonal items if available
+                        if (destData.seasonal && destData.seasonal[season]) {
+                            packingList.clothing.push(...destData.seasonal[season]);
+                        }
+                    }
+                });
+                
+                // Add activity-specific items
+                activities.forEach(activity => {
+                    switch(activity) {
+                        case 'hiking':
+                            packingList.gear.push(
+                                { name: "Biodegradable wet wipes", eco: true, reason: "Leave no trace principles" },
+                                { name: "Reusable water bladder", eco: true, reason: "Better than disposable bottles" }
+                            );
+                            break;
+                        case 'beach':
+                            packingList.gear.push(
+                                { name: "Reef-safe zinc sunscreen", eco: true, reason: "Required in many beach destinations" },
+                                { name: "Silicone swim bag", eco: true, reason: "Keeps sand out of your belongings" }
+                            );
+                            break;
+                    }
+                });
+                
+                // Add eco-focused items
+                switch(ecoFocus) {
+                    case 'zero-waste':
+                        packingList.essentials.push(
+                            { name: "Bamboo utensil set", eco: true, reason: "Avoid single-use plastic cutlery" },
+                            { name: "Solid shampoo bar", eco: true, reason: "No plastic bottle waste" }
+                        );
+                        break;
+                    case 'plastic-free':
+                        packingList.essentials.push(
+                            { name: "Silicone food bags", eco: true, reason: "Alternative to plastic bags" },
+                            { name: "Metal safety razor", eco: true, reason: "Plastic-free shaving" }
+                        );
+                        break;
+                }
+                
+                // Add universal eco items
+                packingList.essentials.push(
+                    { name: "Reusable water bottle with filter", eco: true, reason: "Avoid buying plastic bottles" },
+                    { name: "Foldable tote bag", eco: true, reason: "For shopping to avoid plastic bags" }
+                );
+                
+                // Calculate trip duration
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+                const duration = Math.ceil((end - start) / (1000 * 60 * 60 * 24)) || 7;
+                
+                // Calculate clothing quantities based on duration
+                const underwearQty = Math.min(7, Math.ceil(duration / 2));
+                const socksQty = Math.min(7, Math.ceil(duration / 2));
+                
+                packingList.clothing.push(
+                    { name: `Underwear (${underwearQty})`, eco: false, reason: "Based on trip duration" },
+                    { name: `Socks (${socksQty})`, eco: false, reason: "Based on trip duration" }
+                );
+                
+                // Add documents
+                packingList.documents.push(
+                    { name: "Passport with 6+ months validity", eco: false },
+                    { name: "Printed hotel reservations", eco: false, reason: "Some countries require printed copies" }
+                );
+                
+                // Calculate sustainability score
+                const totalItems = [...packingList.essentials, ...packingList.clothing, ...packingList.toiletries, ...packingList.gear].length;
+                const ecoItems = [...packingList.essentials, ...packingList.clothing, ...packingList.toiletries, ...packingList.gear].filter(item => item.eco).length;
+                const sustainabilityScore = Math.round((ecoItems / totalItems) * 100);
+                
+                // Display results
+                displayResults({
+                    destinations: destinationList,
+                    duration,
+                    season,
+                    climateData,
+                    packingList,
+                    sustainabilityScore,
+                    warnings: packingList.warnings
+                });
+                
+            } catch (error) {
+                console.error("Error generating packing list:", error);
+                resultsContent.innerHTML = `
+                    <div class="error-message">
+                        <h3>Oops! Something went wrong</h3>
+                        <p>We couldn't generate your packing list. Please try again later.</p>
+                        <p>Error: ${error.message}</p>
+                    </div>
+                `;
+            }
+        }
+
+        function displayResults(data) {
+            const { destinations, duration, season, climateData, packingList, sustainabilityScore, warnings } = data;
+            
+            let html = `
+                <div class="trip-summary">
+                    <h2>Your Trip to ${destinations.join(', ')}</h2>
+                    <p>${duration} days in ${season} | ${destinations.length} destination(s)</p>
+                </div>
+                
+                <div class="metrics">
+                    <div class="metric-card">
+                        <h4>Sustainability Score</h4>
+                        <div class="metric-value">${sustainabilityScore}%</div>
+                        <p>${getSustainabilityRemark(sustainabilityScore)}</p>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <h4>Estimated Luggage Weight</h4>
+                        <div class="metric-value">~12kg</div>
+                        <p>${getWeightRemark(duration)}</p>
+                    </div>
+                    
+                    <div class="metric-card">
+                        <h4>Plastic-Free Items</h4>
+                        <div class="metric-value">${packingList.essentials.filter(i => i.eco).length + packingList.gear.filter(i => i.eco).length}</div>
+                        <p>Reducing ocean pollution</p>
+                    </div>
+                </div>
+                
+                <h3 style="margin: 30px 0 15px;">Your Smart Packing List</h3>
+                <div class="packing-sections">
+            `;
+            
+            // Add packing sections
+            const sections = [
+                { title: "Essentials", items: packingList.essentials },
+                { title: "Clothing", items: packingList.clothing },
+                { title: "Toiletries", items: packingList.toiletries },
+                { title: "Gear", items: packingList.gear },
+                { title: "Documents", items: packingList.documents }
+            ];
+            
+            sections.forEach(section => {
+                if (section.items.length > 0) {
+                    html += `
+                        <div class="packing-section">
+                            <div class="section-header">
+                                <span>${section.title}</span>
+                                <span>${section.items.length} items</span>
+                            </div>
+                            <div class="section-items">
+                                ${section.items.map(item => `
+                                    <div class="packing-item">
+                                        <input type="checkbox" class="item-checkbox">
+                                        <div style="flex:1;">
+                                            <div class="item-name">
+                                                ${item.name}
+                                                ${item.eco ? '<span class="eco-badge">🌱 ECO</span>' : ''}
+                                            </div>
+                                            ${item.reason ? `<div class="item-note">${item.reason}</div>` : ''}
+                                        </div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            
+            html += `</div>`;
+            
+            // Add climate info
+            html += `
+                <div class="ai-recommendations">
+                    <h3>🌦️ Climate Insights</h3>
+                    ${climateData.map((climate, i) => `
+                        <div class="recommendation">
+                            <h4>${destinations[i]}</h4>
+                            <p>Expect temperatures between ${climate.temp.min}°C and ${climate.temp.max}°C with 
+                            ${climate.humidity}% humidity. ${getClimatePackingTip(climate)}</p>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            // Add warnings if any
+            if (warnings.length > 0) {
+                html += `
+                    <div class="ai-recommendations" style="background:#fff8e1;border-left:4px solid #ffa000;">
+                        <h3>⚠️ Important Notes</h3>
+                        ${warnings.map(warning => `
+                            <div class="recommendation">
+                                <p>${warning}</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            // Add final tips
+            html += `
+                <div class="ai-recommendations">
+                    <h3>💡 Pro Packing Tips</h3>
+                    <div class="recommendation">
+                        <h4>${getRollingTip(season)}</h4>
+                        <p>${getRollingTipDetails(season)}</p>
+                    </div>
+                    <div class="recommendation">
+                        <h4>Eco Laundry Strategy</h4>
+                        <p>Pack a small sink stopper and biodegradable soap to wash clothes during your trip, reducing what you need to bring.</p>
+                    </div>
+                </div>
+                
+                <button class="print-btn" onclick="window.print()">Print Packing List</button>
+            `;
+            
+            document.getElementById('results-content').innerHTML = html;
+        }
+
+        // Helper functions
+        function getSustainabilityRemark(score) {
+            if (score > 80) return "Excellent eco choices!";
+            if (score > 60) return "Great sustainable packing!";
+            if (score > 40) return "Good start - could improve";
+            return "Consider more eco alternatives";
+        }
+
+        function getWeightRemark(duration) {
+            if (duration > 14) return "Good for long trip";
+            if (duration > 7) return "Ideal weight";
+            return "Could go lighter";
+        }
+
+        function getClimatePackingTip(climate) {
+            if (climate.rainfall === "high") return "Pack quick-dry clothing and waterproof bags.";
+            if (climate.uv === "extreme") return "Essential to bring sun protection (hat, UV clothing, sunscreen).";
+            if (climate.temp.max < 15) return "Layering is key - bring thermal options.";
+            return "Standard packing suitable for this climate.";
+        }
+
+        function getRollingTip(season) {
+            const tips = {
+                spring: "Use packing cubes for changeable weather",
+                summer: "Roll clothes to save space",
+                autumn: "Layer with thin merino wool",
+                winter: "Use vacuum bags for bulky items"
+            };
+            return tips[season] || "Roll clothes to maximize space";
+        }
+
+        function getRollingTipDetails(season) {
+            const details = {
+                spring: "Spring weather can vary - use cubes to organize different weather outfits",
+                summer: "Rolling prevents wrinkles and saves up to 30% space in your luggage",
+                autumn: "Merino wool layers provide warmth without bulk and resist odors",
+                winter: "Compress down jackets and sweaters to half their normal size"
+            };
+            return details[season] || "This technique saves space and reduces wrinkles in your clothes";
+        }
+
+        // In a real implementation, we would have:
+        // 1. Gemini API integration
+        // 2. Weather API integration
+        // 3. More comprehensive knowledge base
+        // 4. User account system to save preferences
+    </script>
+</body>
+</html>

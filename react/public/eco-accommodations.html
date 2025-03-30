@@ -1,0 +1,990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eco-Friendly Hotel Finder</title>
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <!-- Font Awesome for leaf icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-green: #2e8b57;
+            --light-green: #e8f5e9;
+            --dark-green: #1b5e20;
+            --accent-green: #4caf50;
+            --leaf-green: #81c784;
+            --text-dark: #263238;
+            --text-light: #f1f8e9;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--light-green);
+            color: var(--text-dark);
+            line-height: 1.6;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><path fill="%2381c784" opacity="0.2" d="M30,10 Q40,0 50,10 Q60,0 70,10 Q80,0 90,20 Q100,30 90,40 Q80,50 70,40 Q60,30 50,40 Q40,50 30,40 Q20,30 10,20 Q0,10 10,10 Q20,0 30,10 Z" transform="rotate(20 50 50)"/></svg>');
+            background-size: 200px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .search-results {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background-color: rgba(255,255,255,0.9);
+            border: 1px solid var(--leaf-green);
+        }
+        
+        .map-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            height: fit-content;
+            border: 1px solid var(--leaf-green);
+            background-color: rgba(255,255,255,0.9);
+        }
+        
+        #map {
+            height: 600px;
+            width: 100%;
+            border-radius: 10px;
+        }
+        
+        h1 {
+            color: var(--dark-green);
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 32px;
+            grid-column: 1 / -1;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        h1::before, h1::after {
+            content: "🌿";
+            margin: 0 15px;
+            font-size: 24px;
+        }
+        
+        .search-box {
+            display: flex;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 30px;
+            overflow: hidden;
+            grid-column: 1 / -1;
+            background: white;
+            border: 1px solid var(--leaf-green);
+        }
+        
+        #location {
+            flex: 1;
+            padding: 14px 20px;
+            font-size: 16px;
+            border: none;
+            outline: none;
+            background: transparent;
+        }
+        
+        #search-btn {
+            padding: 0 30px;
+            background: var(--primary-green);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        #search-btn:hover {
+            background: var(--dark-green);
+        }
+        
+        #search-btn::before {
+            content: "🌱";
+        }
+        
+        #results {
+            min-height: 200px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: var(--dark-green);
+        }
+        
+        .loading-spinner {
+            border: 4px solid var(--light-green);
+            border-top: 4px solid var(--primary-green);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .hotel {
+            border-bottom: 1px solid #e0e0e0;
+            padding: 25px 0;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .hotel:hover {
+            background: var(--light-green);
+            transform: translateY(-3px);
+        }
+        
+        .hotel::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 5px;
+            background: var(--primary-green);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        
+        .hotel:hover::before {
+            opacity: 1;
+        }
+        
+        .hotel-header {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .hotel-image-container {
+            width: 180px;
+            height: 140px;
+            flex-shrink: 0;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            border: 1px solid var(--leaf-green);
+        }
+        
+        .hotel-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+        
+        .hotel-image:hover {
+            transform: scale(1.03);
+        }
+        
+        .hotel-info {
+            flex: 1;
+        }
+        
+        .hotel-name {
+            font-weight: bold;
+            color: var(--dark-green);
+            font-size: 20px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .hotel-address {
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            line-height: 1.5;
+            font-size: 15px;
+        }
+        
+        .address-icon {
+            color: var(--primary-green);
+            margin-right: 6px;
+            font-size: 16px;
+        }
+        
+        .no-image {
+            background: var(--light-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--dark-green);
+            height: 100%;
+            font-size: 14px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .no-image::before {
+            content: "🌿";
+            position: absolute;
+            font-size: 40px;
+            opacity: 0.2;
+        }
+        
+        .error-message {
+            color: #d32f2f;
+            text-align: center;
+            padding: 20px;
+            background: #ffebee;
+            border-radius: 8px;
+            border: 1px solid #ef9a9a;
+        }
+        
+        .price-range {
+            margin-top: 8px;
+        }
+        
+        .price-tag {
+            display: inline-block;
+            background: #e8f5e9;
+            padding: 4px 8px;
+            border-radius: 15px;
+            color: var(--primary-green);
+            font-weight: bold;
+            font-size: 14px;
+            border: 1px solid var(--leaf-green);
+        }
+        
+        .price-luxury {
+            background: #f1f8e9;
+            color: var(--dark-green);
+            border-color: #a5d6a7;
+        }
+        
+        .price-midrange {
+            background: #e8f5e9;
+            color: var(--primary-green);
+            border-color: var(--leaf-green);
+        }
+        
+        .price-budget {
+            background: #f1f8e9;
+            color: #388e3c;
+            border-color: #81c784;
+        }
+        
+        /* Eco-friendly specific styles */
+        .eco-badge {
+            display: inline-block;
+            background: var(--primary-green);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+        
+        .eco-features {
+            margin-top: 8px;
+            font-size: 14px;
+            color: var(--primary-green);
+        }
+        
+        .eco-feature {
+            display: inline-block;
+            background: #e8f5e9;
+            padding: 3px 8px;
+            border-radius: 15px;
+            margin-right: 5px;
+            margin-bottom: 5px;
+            border: 1px dashed var(--leaf-green);
+            font-size: 13px;
+        }
+        
+        .filter-controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .filter-btn {
+            padding: 8px 16px;
+            background: #e8f5e9;
+            border: 1px solid var(--leaf-green);
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            color: var(--dark-green);
+            transition: all 0.3s;
+        }
+        
+        .filter-btn.active {
+            background: var(--primary-green);
+            color: white;
+            border-color: var(--dark-green);
+        }
+        
+        .eco-marker {
+            background: var(--primary-green);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .hotel-meta {
+            display: flex;
+            gap: 20px;
+            margin-top: 12px;
+            font-size: 14px;
+            flex-wrap: wrap;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            color: var(--text-dark);
+        }
+        
+        .meta-icon {
+            margin-right: 6px;
+            color: var(--primary-green);
+            font-size: 16px;
+        }
+        
+        .meta-item a {
+            color: var(--primary-green);
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .meta-item a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Leaf decorations */
+        .leaf-decoration {
+            position: absolute;
+            opacity: 0.1;
+            z-index: -1;
+        }
+        
+        .leaf-1 {
+            top: 10%;
+            left: 5%;
+            font-size: 100px;
+            transform: rotate(30deg);
+        }
+        
+        .leaf-2 {
+            bottom: 10%;
+            right: 5%;
+            font-size: 80px;
+            transform: rotate(-20deg);
+        }
+        
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+            
+            .map-container {
+                order: -1;
+            }
+            
+            #map {
+                height: 400px;
+            }
+            
+            .leaf-decoration {
+                display: none;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .hotel-header {
+                flex-direction: column;
+            }
+            
+            .hotel-image-container {
+                width: 100%;
+                height: 180px;
+                margin-bottom: 15px;
+            }
+            
+            .search-box {
+                flex-direction: column;
+                box-shadow: none;
+                border-radius: 10px;
+            }
+            
+            #location {
+                border-radius: 10px 10px 0 0;
+                border: 1px solid var(--leaf-green);
+                border-bottom: none;
+            }
+            
+            #search-btn {
+                border-radius: 0 0 10px 10px;
+                padding: 12px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="leaf-decoration leaf-1">🌿</div>
+    <div class="leaf-decoration leaf-2">🍃</div>
+    
+    <div class="container">
+        <h1>Eco-Friendly Hotel Finder</h1>
+        <div class="search-box">
+            <input type="text" id="location" placeholder="Enter city, address or hotel name">
+            <button id="search-btn">Find Green Stays</button>
+        </div>
+        
+        <div class="search-results">
+            <div id="results">
+                <p style="text-align: center; color: var(--dark-green);">Discover eco-friendly hotels around the world 🌍</p>
+            </div>
+        </div>
+        
+        <div class="map-container">
+            <div id="map"></div>
+            <p style="text-align: center; padding: 10px; color: var(--dark-green); font-size: 14px;">
+                Hotel locations will appear here (♻️ indicates eco-friendly hotels)
+            </p>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Initialize map with a default view
+        const map = L.map('map').setView([20, 0], 2);
+        
+        // Add OpenStreetMap tiles (free)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+        // Cache to store already fetched hotel data
+        const hotelCache = {};
+        let hotelMarkers = [];
+        
+        // Eco-friendly tags to look for
+        const ECO_TAGS = [
+            'eco', 'ecological', 'green', 'sustainable', 
+            'environmentally_friendly', 'organic', 'recycling',
+            'solar_power', 'green_energy', 'eco_certification',
+            'energy_efficient', 'water_conservation', 'carbon_neutral',
+            'sustainability', 'biodegradable', 'composting',
+            'local_produce', 'fair_trade', 'eco_tourism'
+        ];
+        
+        document.getElementById('search-btn').addEventListener('click', searchHotels);
+
+        async function searchHotels() {
+            const location = document.getElementById('location').value.trim();
+            
+            // Input validation
+            if (!location) {
+                showError('Please enter a location');
+                return;
+            }
+            
+            if (location.length < 2) {
+                showError('Please enter a more specific location');
+                return;
+            }
+
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div class="loading">
+                    <p>Searching for green hotels in "${location}"...</p>
+                    <div class="loading-spinner"></div>
+                    <p>Helping you travel sustainably 🌱</p>
+                </div>
+            `;
+
+            try {
+                // Check cache first
+                if (hotelCache[location]) {
+                    displayResults(hotelCache[location]);
+                    return;
+                }
+
+                const hotelsData = await findHotelsWithOpenData(location);
+                // Store in cache
+                hotelCache[location] = hotelsData;
+                displayResults(hotelsData);
+            } catch (error) {
+                showError(error.message);
+                console.error('Search error:', error);
+            }
+        }
+
+        function showError(message) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div class="error-message">
+                    <p><strong>Oops!</strong> ${message}</p>
+                    <p>Try a different location or check your internet connection</p>
+                </div>
+            `;
+        }
+
+        async function findHotelsWithOpenData(query) {
+            try {
+                // Step 1: Get coordinates from OpenStreetMap Nominatim
+                const geocodeUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&addressdetails=1`;
+                
+                const response = await fetchWithTimeout(geocodeUrl, 5000);
+                const geocodeData = await response.json();
+                
+                if (!geocodeData || geocodeData.length === 0) {
+                    throw new Error('Location not found. Try being more specific (e.g., "Paris, France" instead of just "Paris").');
+                }
+
+                const firstResult = geocodeData[0];
+                const lat = parseFloat(firstResult.lat);
+                const lon = parseFloat(firstResult.lon);
+                
+                // Validate coordinates
+                if (isNaN(lat) || isNaN(lon) || lat < -90 || lat > 90 || lon < -180 || lon > 180) {
+                    throw new Error('Received invalid coordinates for this location.');
+                }
+
+                // Step 2: Find hotels via Overpass API with additional tag information
+                const overpassQuery = `
+                    [out:json];
+                    (
+                        node["tourism"="hotel"](around:2000,${lat},${lon});
+                        way["tourism"="hotel"](around:2000,${lat},${lon});
+                    );
+                    out center;
+                    >;
+                    out tags;
+                `;
+                
+                const overpassUrl = `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(overpassQuery)}`;
+                
+                let hotelData;
+                try {
+                    const response = await fetchWithTimeout(overpassUrl, 8000);
+                    hotelData = await response.json();
+                } catch (e) {
+                    throw new Error('Failed to fetch hotel data. The server might be busy.');
+                }
+                
+                if (!hotelData.elements || hotelData.elements.length === 0) {
+                    throw new Error('No hotels found in this area. Try a larger radius or different location.');
+                }
+
+                // Process hotel data with coordinates
+                const hotelsWithDetails = await Promise.all(
+                    hotelData.elements.slice(0, 10).map(async (element) => {
+                        // Get coordinates - different for nodes vs ways
+                        let coords;
+                        if (element.type === 'node') {
+                            coords = [element.lat, element.lon];
+                        } else if (element.type === 'way') {
+                            // For ways, use the center point
+                            coords = [element.center.lat, element.center.lon];
+                        } else {
+                            return null; // Skip if not a node or way
+                        }
+                        
+                        // Skip if coordinates are invalid
+                        if (!coords || isNaN(coords[0]) || isNaN(coords[1])) {
+                            return null;
+                        }
+                        
+                        const name = element.tags?.name || 'Unnamed Hotel';
+                        
+                        // Check for eco-friendly features
+                        const ecoFeatures = [];
+                        if (element.tags) {
+                            for (const tag in element.tags) {
+                                const lowerTag = tag.toLowerCase();
+                                if (ECO_TAGS.some(ecoTag => lowerTag.includes(ecoTag))) {
+                                    // Check if the tag value indicates eco-friendly (not 'no')
+                                    if (element.tags[tag].toLowerCase() !== 'no') {
+                                        ecoFeatures.push(tag.replace(/_/g, ' '));
+                                    }
+                                }
+                            }
+                            
+                            // Check for common eco-certifications
+                            if (element.tags['certification']) {
+                                const certs = element.tags['certification'].split(';');
+                                certs.forEach(cert => {
+                                    if (cert.toLowerCase().includes('eco') || 
+                                        cert.toLowerCase().includes('green')) {
+                                        ecoFeatures.push(`Certified: ${cert.trim()}`);
+                                    }
+                                });
+                            }
+                        }
+                        
+                        // Get price information
+                        const priceRange = parsePriceRange(
+                            element.tags?.tourism === 'hotel' ? 
+                            (element.tags['price:range'] || element.tags['price']) : 
+                            null
+                        );
+                        
+                        return {
+                            name,
+                            address: buildCompleteAddress(element.tags || {}),
+                            phone: element.tags?.phone,
+                            website: element.tags?.website,
+                            coordinates: coords,
+                            priceRange,
+                            ecoFeatures,
+                            isEcoFriendly: ecoFeatures.length > 0
+                        };
+                    })
+                );
+
+                return {
+                    searchLocation: Object.values(geocodeData[0].address || {}).filter(Boolean).join(', '),
+                    searchCoords: [lat, lon],
+                    hotels: hotelsWithDetails.filter(h => h && h.coordinates)
+                };
+            } catch (error) {
+                console.error('Error in findHotelsWithOpenData:', error);
+                throw new Error(error.message || 'Failed to process location data. Please try again.');
+            }
+        }
+
+        function parsePriceRange(priceData) {
+            if (!priceData) return null;
+            
+            // Handle numeric values (1-5 scale)
+            if (/^[1-5]$/.test(priceData)) {
+                const level = parseInt(priceData);
+                return {
+                    level,
+                    description: ['Budget', 'Economy', 'Mid-range', 'Upscale', 'Luxury'][level - 1],
+                    symbol: '$'.repeat(level),
+                    class: ['price-budget', 'price-budget', 'price-midrange', 'price-midrange', 'price-luxury'][level - 1]
+                };
+            }
+            
+            // Handle price strings like "$$$"
+            if (typeof priceData === 'string' && priceData.startsWith('$')) {
+                const level = priceData.length;
+                return {
+                    level,
+                    description: ['Budget', 'Economy', 'Mid-range', 'Upscale', 'Luxury'][Math.min(level - 1, 4)],
+                    symbol: priceData,
+                    class: ['price-budget', 'price-budget', 'price-midrange', 'price-midrange', 'price-luxury'][Math.min(level - 1, 4)]
+                };
+            }
+            
+            return null;
+        }
+
+        function displayResults(data) {
+            const { searchLocation, searchCoords, hotels } = data;
+            const resultsDiv = document.getElementById('results');
+            
+            // Validate coordinates before updating map
+            if (!searchCoords || !Array.isArray(searchCoords) || 
+                isNaN(searchCoords[0]) || isNaN(searchCoords[1])) {
+                resultsDiv.innerHTML = `
+                    <div class="error-message">
+                        <p>We couldn't get valid coordinates for ${searchLocation}</p>
+                        <p>Try a more specific location or check your spelling</p>
+                    </div>
+                `;
+                return;
+            }
+
+            if (hotels.length === 0) {
+                resultsDiv.innerHTML = `
+                    <div class="error-message">
+                        <p>No hotels found near ${searchLocation}</p>
+                        <p>Try a different location or larger search area</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Update the map
+            updateMap(searchCoords, hotels);
+            
+            // Display hotel list with filter controls
+            let html = `
+                <div style="margin-bottom:20px;">
+                    <h3 style="color: var(--dark-green);">🌿 Hotels near ${searchLocation}</h3>
+                    <p style="color:var(--primary-green); font-size:14px;">Showing ${hotels.length} results (${hotels.filter(h => h.isEcoFriendly).length} eco-friendly)</p>
+                    <div class="filter-controls">
+                        <button class="filter-btn active" data-filter="all">All Hotels</button>
+                        <button class="filter-btn" data-filter="eco">Eco-Friendly Only</button>
+                    </div>
+                </div>
+                <div class="hotel-list">
+            `;
+            
+            hotels.forEach((hotel, index) => {
+                html += `
+                    <div class="hotel" data-index="${index}" data-eco="${hotel.isEcoFriendly}">
+                        <div class="hotel-header">
+                            <div class="hotel-image-container">
+                                <div class="no-image">🌱<br>No image available</div>
+                            </div>
+                            <div class="hotel-info">
+                                <div class="hotel-name">
+                                    ${hotel.name}
+                                    ${hotel.isEcoFriendly ? '<span class="eco-badge">♻️ Eco-Friendly</span>' : ''}
+                                </div>
+                                <div class="hotel-address">
+                                    <span class="address-icon">📍</span>
+                                    ${hotel.address}
+                                </div>
+                                ${hotel.priceRange ? `
+                                    <div class="price-range">
+                                        <span class="price-tag ${hotel.priceRange.class}">
+                                            ${hotel.priceRange.symbol} ${hotel.priceRange.description}
+                                        </span>
+                                    </div>
+                                ` : ''}
+                                ${hotel.ecoFeatures.length > 0 ? `
+                                    <div class="eco-features">
+                                        ${hotel.ecoFeatures.map(feature => 
+                                            `<span class="eco-feature">${feature}</span>`
+                                        ).join('')}
+                                    </div>
+                                ` : ''}
+                                <div class="hotel-meta">
+                                    ${hotel.phone ? `
+                                        <div class="meta-item">
+                                            <span class="meta-icon">📞</span>
+                                            ${hotel.phone}
+                                        </div>
+                                    ` : ''}
+                                    ${hotel.website ? `
+                                        <div class="meta-item">
+                                            <span class="meta-icon">🌐</span>
+                                            <a href="${hotel.website.startsWith('http') ? hotel.website : 'https://'+hotel.website}" target="_blank">Website</a>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            resultsDiv.innerHTML = html;
+            
+            // Add filter functionality
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const filter = this.dataset.filter;
+                    document.querySelectorAll('.hotel').forEach(hotel => {
+                        if (filter === 'all' || 
+                            (filter === 'eco' && hotel.dataset.eco === 'true')) {
+                            hotel.style.display = '';
+                        } else {
+                            hotel.style.display = 'none';
+                        }
+                    });
+                });
+            });
+            
+            // Add click handlers to highlight markers
+            document.querySelectorAll('.hotel').forEach(hotelElement => {
+                hotelElement.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    highlightHotelOnMap(index);
+                });
+            });
+        }
+
+        function updateMap(centerCoords, hotels) {
+            // Clear existing markers
+            hotelMarkers.forEach(marker => map.removeLayer(marker));
+            hotelMarkers = [];
+            
+            // Set view to search location
+            map.setView(centerCoords, 15);
+            
+            // Add marker for search location
+            L.marker(centerCoords, {
+                icon: L.divIcon({
+                    className: 'search-location-icon',
+                    html: '📍',
+                    iconSize: [30, 30]
+                })
+            })
+            .bindPopup('Search Location')
+            .addTo(map);
+            
+            // Add markers for each hotel
+            hotels.forEach((hotel, index) => {
+                if (!hotel.coordinates) return;
+                
+                // Create appropriate marker icon
+                let markerIcon;
+                if (hotel.isEcoFriendly) {
+                    // Eco-friendly hotels get a green marker
+                    markerIcon = L.divIcon({
+                        className: `eco-marker`,
+                        html: '♻️',
+                        iconSize: [30, 30]
+                    });
+                } else if (hotel.priceRange) {
+                    // Regular hotels with price info
+                    markerIcon = L.divIcon({
+                        className: `hotel-marker hotel-marker-${index}`,
+                        html: getPriceMarkerIcon(hotel.priceRange.level),
+                        iconSize: [30, 30]
+                    });
+                } else {
+                    // Default hotel icon
+                    markerIcon = L.divIcon({
+                        className: `hotel-marker hotel-marker-${index}`,
+                        html: '🏨',
+                        iconSize: [30, 30]
+                    });
+                }
+                
+                // Add eco-friendly info to popup
+                const popupContent = `
+                    <b>${hotel.name}${hotel.isEcoFriendly ? ' ♻️' : ''}</b><br>
+                    ${hotel.address}<br>
+                    ${hotel.priceRange ? `<br><span class="${hotel.priceRange.class}">${hotel.priceRange.symbol} ${hotel.priceRange.description}</span>` : ''}
+                    ${hotel.isEcoFriendly ? `<br><span style="color:#27ae60;">Eco-Friendly: ${hotel.ecoFeatures.join(', ')}</span>` : ''}
+                    ${hotel.phone ? `<br>📞 ${hotel.phone}` : ''}
+                    ${hotel.website ? `<br><a href="${hotel.website}" target="_blank">Visit Website</a>` : ''}
+                `;
+                
+                const marker = L.marker(hotel.coordinates, {
+                    icon: markerIcon
+                })
+                .bindPopup(popupContent)
+                .addTo(map);
+                
+                hotelMarkers.push(marker);
+            });
+        }
+
+        function getPriceMarkerIcon(priceLevel) {
+            // Default to hotel icon if no price level
+            if (!priceLevel) return '🏨';
+            
+            // Use different emojis based on price range
+            if (priceLevel <= 2) return '🏠'; // Budget
+            if (priceLevel === 3) return '🏨'; // Mid-range
+            if (priceLevel === 4) return '🏩'; // Upscale
+            return '🏰'; // Luxury (5+)
+        }
+
+        function highlightHotelOnMap(index) {
+            // Reset all markers
+            hotelMarkers.forEach(marker => {
+                const hotel = hotelMarkers.indexOf(marker);
+                const originalHotel = hotelCache[document.getElementById('location').value.trim()]?.hotels[hotel];
+                
+                if (originalHotel) {
+                    if (originalHotel.isEcoFriendly) {
+                        marker.setIcon(L.divIcon({
+                            className: 'eco-marker',
+                            html: '♻️',
+                            iconSize: [30, 30]
+                        }));
+                    } else if (originalHotel.priceRange) {
+                        marker.setIcon(L.divIcon({
+                            className: 'hotel-marker',
+                            html: getPriceMarkerIcon(originalHotel.priceRange.level),
+                            iconSize: [30, 30]
+                        }));
+                    } else {
+                        marker.setIcon(L.divIcon({
+                            className: 'hotel-marker',
+                            html: '🏨',
+                            iconSize: [30, 30]
+                        }));
+                    }
+                }
+            });
+            
+            // Highlight the selected marker
+            if (hotelMarkers[index]) {
+                hotelMarkers[index].setIcon(L.divIcon({
+                    className: 'hotel-marker highlighted',
+                    html: '⭐',
+                    iconSize: [30, 30]
+                }));
+                
+                // Pan to the marker
+                map.panTo(hotelMarkers[index].getLatLng());
+                
+                // Open the popup
+                hotelMarkers[index].openPopup();
+            }
+        }
+
+        // Helper function to add timeout to fetch
+        function fetchWithTimeout(url, timeout = 5000) {
+            return Promise.race([
+                fetch(url),
+                new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('Request timeout')), timeout)
+                )
+            ]);
+        }
+
+        function buildCompleteAddress(tags) {
+            try {
+                // First try the structured address fields
+                const addressParts = [
+                    tags['addr:housenumber'] ? tags['addr:housenumber'] + ' ' + (tags['addr:street'] || '') : tags['addr:street'],
+                    tags['addr:city'],
+                    tags['addr:postcode'],
+                    tags['addr:country']
+                ].filter(Boolean);
+
+                if (addressParts.length > 0) return addressParts.join(', ');
+
+                // Fallback to other address-like tags
+                const fallbackAddress = tags['address'] || tags['addr:full'] || '';
+                if (fallbackAddress) return fallbackAddress;
+
+                return 'Address not specified';
+            } catch (error) {
+                console.error('Error building address:', error);
+                return 'Address information not available';
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Route Optimizer</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        :root {
+            --primary-green: #2E7D32;
+            --light-green: #81C784;
+            --lighter-green: #C8E6C9;
+            --leaf-green: #4CAF50;
+            --white: #FFFFFF;
+            --light-gray: #F5F5F5;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--white);
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23c8e6c9' fill-opacity='0.2' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        
+        h1 {
+            color: var(--primary-green);
+            text-align: center;
+            margin-bottom: 25px;
+            position: relative;
+        }
+        
+        h1::after {
+            content: "";
+            display: block;
+            width: 100px;
+            height: 30px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234CAF50'%3E%3Cpath d='M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9.5l3.5 3.5 5.5-6-1.5-1.5-4 4.5-2-2z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .input-section {
+            display: flex;
+            margin-bottom: 20px;
+            gap: 15px;
+            flex-wrap: wrap;
+            background-color: var(--white);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .input-section::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 100%;
+            background-color: var(--primary-green);
+        }
+        
+        .coord-input {
+            display: flex;
+            gap: 10px;
+            flex-grow: 1;
+        }
+        
+        input {
+            padding: 10px 15px;
+            flex-grow: 1;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: var(--light-green);
+            box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+        }
+        
+        button {
+            padding: 10px 20px;
+            background-color: var(--primary-green);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        button:hover {
+            background-color: var(--leaf-green);
+            transform: translateY(-2px);
+        }
+        
+        button:disabled {
+            background-color: #cccccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        #map {
+            height: 500px;
+            width: 100%;
+            margin-top: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 1;
+        }
+        
+        #error {
+            color: #d32f2f;
+            margin: 10px 0;
+            padding: 15px;
+            background: #ffebee;
+            border-radius: 6px;
+            display: none;
+            border-left: 4px solid #d32f2f;
+        }
+        
+        .coordinates-list {
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .coordinates-list div {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 20px;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .coordinates-list div:hover {
+            background-color: var(--lighter-green);
+        }
+        
+        .coordinates-list button {
+            padding: 6px 12px;
+            background-color: #f44336;
+            font-size: 14px;
+        }
+        
+        .coordinates-list button:hover {
+            background-color: #e53935;
+        }
+        
+        .results {
+            margin-top: 20px;
+            padding: 20px;
+            background: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .results::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2381C784'%3E%3Cpath d='M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            opacity: 0.1;
+        }
+        
+        .transport-modes {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .transport-mode {
+            padding: 15px 20px;
+            background: var(--lighter-green);
+            border-radius: 8px;
+            cursor: pointer;
+            text-align: center;
+            min-width: 100px;
+            position: relative;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        
+        .transport-mode:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .transport-mode.selected {
+            background: var(--light-green);
+            border-color: var(--primary-green);
+            font-weight: bold;
+            color: var(--primary-green);
+        }
+        
+        .transport-mode.best {
+            background: var(--light-green);
+            border: 2px dashed var(--primary-green);
+        }
+        
+        .transport-icon {
+            width: 30px;
+            height: 30px;
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--white);
+            border-radius: 50%;
+            padding: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .time-display {
+            font-size: 1.4em;
+            margin: 25px 0;
+            padding: 15px;
+            background: var(--white);
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid var(--light-green);
+            position: relative;
+        }
+        
+        .time-display::before {
+            content: "";
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 10px solid var(--light-green);
+        }
+        
+        .mode-times {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 25px;
+        }
+        
+        .mode-time {
+            padding: 15px;
+            background: var(--white);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            border-left: 4px solid var(--light-green);
+        }
+        
+        .mode-time:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        .mode-time-icon {
+            width: 30px;
+            height: 30px;
+            flex-shrink: 0;
+        }
+        
+        .mode-time div {
+            flex-grow: 1;
+        }
+        
+        .mode-time strong {
+            display: block;
+            color: var(--primary-green);
+            margin-bottom: 5px;
+        }
+        
+        .carbon-info {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 3px;
+        }
+        
+        .greenest {
+            color: var(--primary-green);
+            font-weight: normal;
+            font-size: 0.8em;
+            margin-left: 5px;
+        }
+        
+        .best {
+            font-weight: bold;
+            color: var(--primary-green);
+        }
+        
+        .loading {
+            color: var(--primary-green);
+            font-style: italic;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .leaf-decoration {
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            opacity: 0.1;
+            z-index: -1;
+        }
+        
+        .leaf-1 {
+            top: 50px;
+            left: -30px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234CAF50'%3E%3Cpath d='M17 8C8 10 5.9 16.8 5.9 16.8l2.5.7c.6-1.7 1.4-3.3 2.5-4.8-1.9 2.3-3.1 5.1-3.4 8.1l2.5.7c.3-2.6 1.3-5.2 2.9-7.4 1.8 1.7 3.1 4 3.7 6.6l2.4-.7c-.8-3.2-2.5-6-4.8-8.1 1.5-1.4 3.2-2.5 5-3.3L17 8z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            transform: rotate(-15deg);
+        }
+        
+        .leaf-2 {
+            bottom: 100px;
+            right: -30px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%234CAF50'%3E%3Cpath d='M17 8C8 10 5.9 16.8 5.9 16.8l2.5.7c.6-1.7 1.4-3.3 2.5-4.8-1.9 2.3-3.1 5.1-3.4 8.1l2.5.7c.3-2.6 1.3-5.2 2.9-7.4 1.8 1.7 3.1 4 3.7 6.6l2.4-.7c-.8-3.2-2.5-6-4.8-8.1 1.5-1.4 3.2-2.5 5-3.3L17 8z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            transform: rotate(165deg);
+        }
+        
+        @media (max-width: 768px) {
+            .coord-input {
+                flex-direction: column;
+            }
+            
+            .mode-times {
+                grid-template-columns: 1fr;
+            }
+            
+            .transport-modes {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="leaf-decoration leaf-1"></div>
+    <div class="leaf-decoration leaf-2"></div>
+    
+    <h1>Green Route Optimizer</h1>
+    
+    <div class="input-section">
+        <div class="coord-input">
+            <input type="text" id="latInput" placeholder="Latitude (e.g. 48.8584)">
+            <input type="text" id="lonInput" placeholder="Longitude (e.g. 2.2945)">
+        </div>
+        <button id="addButton">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+            </svg>
+            Add Coordinate
+        </button>
+        <button id="optimizeButton" disabled>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9.5l3.5 3.5 5.5-6-1.5-1.5-4 4.5-2-2z'/%3E%3C/svg%3E"/>
+            </svg>
+            Find Optimal Route
+        </button>
+        <button id="clearButton">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
+                <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
+            </svg>
+            Clear All
+        </button>
+    </div>
+
+    <div id="error"></div>
+
+    <div class="coordinates-list" id="coordinatesList"></div>
+    
+    <div id="results" style="display: none;">
+        <div class="transport-modes" id="transportModes"></div>
+        <div class="time-display">
+            <span id="selectedMode"></span>
+            <span id="travelTime"></span>
+        </div>
+        <div class="mode-times" id="modeTimes"></div>
+        <div class="results">
+            <h3>Optimal Route:</h3>
+            <p id="distance">Total Distance: </p>
+            <p id="carbon">Carbon Footprint: </p>
+            <ol id="routeOrder"></ol>
+        </div>
+    </div>
+
+    <div id="map"></div>
+
+    <!-- Transportation mode icons -->
+    <svg style="display: none;">
+        <symbol id="bus-icon" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M18 11H6V6h12m-1.5 11a1.5 1.5 0 0 1-1.5-1.5a1.5 1.5 0 0 1 1.5-1.5a1.5 1.5 0 0 1 1.5 1.5a1.5 1.5 0 0 1-1.5 1.5m-9 0A1.5 1.5 0 0 1 6 14.5A1.5 1.5 0 0 1 7.5 13A1.5 1.5 0 0 1 9 14.5A1.5 1.5 0 0 1 7.5 16M4 16c0 .88.39 1.67 1 2.22V20a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h8v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1.78c.61-.55 1-1.34 1-2.22V6c0-3.5-3.58-4-8-4s-8 .5-8 4v10z"/>
+        </symbol>
+        <symbol id="bike-icon" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M5 20.5A3.5 3.5 0 0 1 1.5 17A3.5 3.5 0 0 1 5 13.5A3.5 3.5 0 0 1 8.5 17A3.5 3.5 0 0 1 5 20.5M5 12A5 5 0 0 0 0 17a5 5 0 0 0 5 5a5 5 0 0 0 5-5a5 5 0 0 0-5-5m14.5-7A3.5 3.5 0 0 1 16 8.5A3.5 3.5 0 0 1 12.5 5A3.5 3.5 0 0 1 16 1.5A3.5 3.5 0 0 1 19.5 5m.5 1.56l-1.97 1.97L16.94 8l1.97-1.97L20 6.56M12.5 11H11v4h1v-1.5h1V15h1.5v-3.5h1V11h-4.5M19 20.5A3.5 3.5 0 0 1 15.5 17A3.5 3.5 0 0 1 19 13.5A3.5 3.5 0 0 1 22.5 17A3.5 3.5 0 0 1 19 20.5M6 7h5v1.5H6V7m13.5 12A1.5 1.5 0 0 0 21 17.5A1.5 1.5 0 0 0 19.5 16A1.5 1.5 0 0 0 18 17.5A1.5 1.5 0 0 0 19.5 19M5 15A2 2 0 0 1 7 17A2 2 0 0 1 5 19A2 2 0 0 1 3 17A2 2 0 0 1 5 15m14-7.5h-1V7h1v.5z"/>
+        </symbol>
+        <symbol id="walk-icon" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M12 4.5c1.1 0 2-.9 2-2s-.9-2-2-2s-2 .9-2 2s.9 2 2 2m3.6 13.1l1-4.4l-2.1-2l1-1.5l3.5 2.4l-1.7 7.4c-.3 1.3-1.5 2.2-2.8 2.2h-3.9c-.8 0-1.6-.4-2.1-1.1l-1.3-1.8l1.7-1l1.3 1.8l.3.4h1.5l-1.8-7.6l-3.1 1.8v4.7h1.9v3H4v-8.5h1.5v3.3l3.3-1.9c.5-.3.8-.8.8-1.4v-5.6c0-.8.7-1.5 1.5-1.5s1.5.7 1.5 1.5v4.3l1.8 1.7l-.8 3.5h3.3z"/>
+        </symbol>
+        <symbol id="train-icon" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M12 2c-4 0-8 .5-8 4v9.5c0 .95.38 1.81 1 2.44V20a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h8v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-2.06c.62-.63 1-1.49 1-2.44V6c0-3.5-4-4-8-4m0 2c3.51 0 4.96.48 5.57 1H6.43c.61-.52 2.06-1 5.57-1M6 7h5v3H6m12 8c0 1.1-.9 2-2 2H8c-1.1 0-2-.9-2-2v-4h12v4m-7-6V7h7v3h-7z"/>
+        </symbol>
+        <symbol id="car-icon" viewBox="0 0 24 24">
+            <path fill="currentColor" d="M5 11l1.5-4.5h11L19 11m-1.5 5a1.5 1.5 0 0 1-1.5-1.5a1.5 1.5 0 0 1 1.5-1.5a1.5 1.5 0 0 1 1.5 1.5a1.5 1.5 0 0 1-1.5 1.5m-11 0A1.5 1.5 0 0 1 5 14.5A1.5 1.5 0 0 1 6.5 13A1.5 1.5 0 0 1 8 14.5A1.5 1.5 0 0 1 6.5 16M18.92 6c-.2-.58-.76-1-1.42-1h-11c-.66 0-1.22.42-1.42 1L3 12v8a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1h12v1a1 1 0 0 0 1 1h1a1 1 0 0 0 1-1v-1.78c.61-.55 1-1.34 1-2.22v-8l-2.08-6z"/>
+        </symbol>
+    </svg>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Initialize map centered on Europe
+        const map = L.map('map').setView([48.8566, 2.3522], 4);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Transportation modes with average speeds (km/h), OSRM profiles, and carbon data
+        const transportModes = {
+            driving: { 
+                name: "Car", 
+                speed: 50, 
+                color: "#2E7D32", 
+                profile: "driving", 
+                icon: "car-icon",
+                co2PerKm: 170, // Average car (petrol) emissions gCO2/km
+                occupancy: 1.5  // Average car occupancy
+            },
+            cycling: { 
+                name: "Bike", 
+                speed: 15, 
+                color: "#4CAF50", 
+                profile: "cycling", 
+                icon: "bike-icon",
+                co2PerKm: 5,   // Approximate from food production
+                occupancy: 1
+            },
+            walking: { 
+                name: "Walk", 
+                speed: 5, 
+                color: "#81C784", 
+                profile: "walking", 
+                icon: "walk-icon",
+                co2PerKm: 0,   // No direct emissions
+                occupancy: 1
+            },
+            bus: { 
+                name: "Bus", 
+                speed: 25, 
+                color: "#388E3C", 
+                profile: "driving", 
+                icon: "bus-icon",
+                co2PerKm: 105,  // Average bus emissions gCO2/km
+                occupancy: 12.7 // Average bus occupancy
+            },
+            train: { 
+                name: "Train", 
+                speed: 80, 
+                color: "#689F38", 
+                profile: "driving", 
+                icon: "train-icon",
+                co2PerKm: 41,   // Average train emissions gCO2/km
+                occupancy: 28   // Average train occupancy
+            }
+        };
+
+        // Store locations and map elements
+        const locations = [];
+        let markers = [];
+        let routeLayers = {};
+        let currentMode = 'driving';
+        let modeTimes = {};
+        let optimalOrder = [];
+        let totalDistance = 0;
+
+        // DOM elements
+        const latInput = document.getElementById('latInput');
+        const lonInput = document.getElementById('lonInput');
+        const addButton = document.getElementById('addButton');
+        const optimizeButton = document.getElementById('optimizeButton');
+        const clearButton = document.getElementById('clearButton');
+        const coordinatesList = document.getElementById('coordinatesList');
+        const errorDiv = document.getElementById('error');
+        const resultsDiv = document.getElementById('results');
+        const transportModesDiv = document.getElementById('transportModes');
+        const modeTimesDiv = document.getElementById('modeTimes');
+        const selectedModeSpan = document.getElementById('selectedMode');
+        const travelTimeSpan = document.getElementById('travelTime');
+        const distancePara = document.getElementById('distance');
+        const carbonPara = document.getElementById('carbon');
+        const routeOrder = document.getElementById('routeOrder');
+
+        // Event listeners
+        addButton.addEventListener('click', addCoordinate);
+        optimizeButton.addEventListener('click', findOptimalRoute);
+        clearButton.addEventListener('click', clearAll);
+        lonInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') addCoordinate();
+        });
+
+        // Function to parse URL parameters
+        function parseUrlCoordinates() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const coordinatesParam = urlParams.get('coordinates');
+            
+            if (!coordinatesParam) return;
+            
+            try {
+                // Split the coordinates by | to get individual points
+                const points = coordinatesParam.split('|');
+                
+                points.forEach(point => {
+                    // Split each point by , to get lat, lon, and optional name
+                    const parts = point.split(',');
+                    if (parts.length >= 2) {
+                        const lat = parseFloat(parts[0]);
+                        const lon = parseFloat(parts[1]);
+                        let name = '';
+                        
+                        // If there's a name part, decode it (handles URL encoding like %20 for spaces)
+                        if (parts.length >= 3) {
+                            name = decodeURIComponent(parts[2].replace(/\+/g, ' '));
+                        } else {
+                            name = `Location (${lat.toFixed(4)}, ${lon.toFixed(4)})`;
+                        }
+                        
+                        // Add to locations array
+                        locations.push({ lat, lon, name });
+                    }
+                });
+                
+                // If we got any coordinates, update the UI and map
+                if (locations.length > 0) {
+                    updateCoordinatesList();
+                    addMarkersToMap();
+                    
+                    // Enable optimize button if we have at least 2 points
+                    if (locations.length >= 2) {
+                        optimizeButton.disabled = false;
+                    }
+                    
+                    // Automatically optimize if we have coordinates from URL
+                    if (locations.length >= 2) {
+                        setTimeout(() => {
+                            findOptimalRoute();
+                        }, 500);
+                    }
+                }
+                
+            } catch (err) {
+                console.error("Error parsing URL coordinates:", err);
+                showError("Error parsing coordinates from URL");
+            }
+        }
+
+        // Function to add markers to map based on locations array
+        function addMarkersToMap() {
+            // Clear existing markers
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+            
+            // Add new markers
+            locations.forEach(loc => {
+                const marker = L.marker([loc.lat, loc.lon])
+                    .bindPopup(loc.name)
+                    .addTo(map);
+                markers.push(marker);
+            });
+            
+            // Update map view
+            if (markers.length > 0) {
+                map.fitBounds(markers.map(m => m.getLatLng()));
+            }
+        }
+
+        // Call the URL parsing function when the page loads
+        document.addEventListener('DOMContentLoaded', parseUrlCoordinates);
+
+        async function addCoordinate() {
+            try {
+                // Get and clean inputs
+                let lat = latInput.value.trim().replace(',', '.');
+                let lon = lonInput.value.trim().replace(',', '.');
+                
+                // Validate inputs
+                if (!lat || !lon) {
+                    showError("Please enter both latitude and longitude");
+                    return;
+                }
+                
+                lat = parseFloat(lat);
+                lon = parseFloat(lon);
+                
+                if (isNaN(lat) || isNaN(lon)) {
+                    showError("Please enter valid numbers");
+                    return;
+                }
+                
+                if (lat < -90 || lat > 90) {
+                    showError("Latitude must be between -90 and 90");
+                    return;
+                }
+                
+                if (lon < -180 || lon > 180) {
+                    showError("Longitude must be between -180 and 180");
+                    return;
+                }
+                
+                // Get place name from coordinates (reverse geocoding)
+                const name = await getPlaceName(lat, lon);
+                
+                // Add to locations array
+                locations.push({ lat, lon, name });
+                
+                // Update UI
+                updateCoordinatesList();
+                
+                // Add marker to map
+                const marker = L.marker([lat, lon])
+                    .bindPopup(name)
+                    .addTo(map);
+                markers.push(marker);
+                
+                // Update map view
+                if (locations.length === 1) {
+                    map.setView([lat, lon], 13);
+                } else {
+                    map.fitBounds(markers.map(m => m.getLatLng()));
+                }
+                
+                // Enable optimize button if we have at least 2 points
+                if (locations.length >= 2) {
+                    optimizeButton.disabled = false;
+                }
+                
+                // Clear inputs and hide any errors
+                latInput.value = '';
+                lonInput.value = '';
+                hideError();
+                latInput.focus();
+                
+            } catch (err) {
+                showError("Error adding coordinate: " + err.message);
+                console.error(err);
+            }
+        }
+
+        async function getPlaceName(lat, lon) {
+            try {
+                const response = await fetch(
+                    `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`,
+                    { headers: { 'User-Agent': 'GreenRouteOptimizer' } }
+                );
+                const data = await response.json();
+                
+                if (data.error) {
+                    return `Location (${lat.toFixed(4)}, ${lon.toFixed(4)})`;
+                }
+                
+                return data.display_name.split(',')[0] || `Location (${lat.toFixed(4)}, ${lon.toFixed(4)})`;
+            } catch {
+                return `Location (${lat.toFixed(4)}, ${lon.toFixed(4)})`;
+            }
+        }
+
+        async function findOptimalRoute() {
+            try {
+                if (locations.length < 2) return;
+                
+                optimizeButton.disabled = true;
+                showError("Calculating optimal routes...", false);
+                resultsDiv.style.display = 'none';
+                
+                // Clear previous routes
+                Object.values(routeLayers).forEach(layer => {
+                    if (layer) map.removeLayer(layer);
+                });
+                routeLayers = {};
+                
+                // Step 1: Get distance matrix for driving (for optimal route calculation)
+                const coordsString = locations.map(l => `${l.lon},${l.lat}`).join(';');
+                const matrixResponse = await fetch(
+                    `https://router.project-osrm.org/table/v1/driving/${coordsString}?annotations=distance,duration`
+                );
+                
+                if (!matrixResponse.ok) {
+                    throw new Error("Failed to calculate distance matrix");
+                }
+                
+                const matrixData = await matrixResponse.json();
+                
+                // Step 2: Find optimal order (nearest neighbor algorithm)
+                optimalOrder = solveTSP(matrixData.distances);
+                totalDistance = calculateTotalDistance(optimalOrder, matrixData.distances);
+                
+                // Step 3: Calculate times and carbon footprint for all transport modes
+                modeTimes = calculateTransportTimes(totalDistance);
+                
+                // Step 4: Get route geometry for the selected mode
+                const routeGeometry = await getRouteGeometry(optimalOrder, currentMode);
+                
+                // Display results
+                displayResults(optimalOrder, totalDistance, routeGeometry);
+                
+            } catch (err) {
+                showError("Routing error: " + err.message);
+                console.error(err);
+            } finally {
+                optimizeButton.disabled = false;
+            }
+        }
+
+        // Improved TSP solver (nearest neighbor with best of 3 starting points)
+        function solveTSP(distances) {
+            const numPoints = distances.length;
+            if (numPoints <= 2) return Array.from({length: numPoints}, (_, i) => i);
+            
+            let bestPath = [];
+            let bestDistance = Infinity;
+            
+            // Try starting from first 3 points to get better results
+            const startPoints = Math.min(3, numPoints);
+            for (let start = 0; start < startPoints; start++) {
+                const path = [start];
+                const unvisited = new Set(Array.from({length: numPoints}, (_, i) => i));
+                unvisited.delete(start);
+                
+                while (unvisited.size > 0) {
+                    const last = path[path.length - 1];
+                    let nearest = null;
+                    let minDist = Infinity;
+                    
+                    // Find nearest unvisited point
+                    unvisited.forEach(point => {
+                        const dist = distances[last][point];
+                        if (dist < minDist) {
+                            minDist = dist;
+                            nearest = point;
+                        }
+                    });
+                    
+                    path.push(nearest);
+                    unvisited.delete(nearest);
+                }
+                
+                // Calculate total distance for this path
+                const pathDistance = calculateTotalDistance(path, distances);
+                if (pathDistance < bestDistance) {
+                    bestDistance = pathDistance;
+                    bestPath = path;
+                }
+            }
+            
+            return bestPath;
+        }
+
+        function calculateTotalDistance(order, distances) {
+            let total = 0;
+            for (let i = 0; i < order.length - 1; i++) {
+                total += distances[order[i]][order[i + 1]];
+            }
+            return total;
+        }
+
+        function calculateTransportTimes(distanceMeters) {
+            const distanceKm = distanceMeters / 1000;
+            const times = {};
+            
+            for (const [mode, info] of Object.entries(transportModes)) {
+                const hours = distanceKm / info.speed;
+                const minutes = Math.round(hours * 60);
+                
+                // Calculate carbon footprint (grams CO2)
+                const carbonFootprint = Math.round(distanceKm * info.co2PerKm / info.occupancy);
+                
+                times[mode] = {
+                    name: info.name,
+                    minutes: minutes,
+                    color: info.color,
+                    icon: info.icon,
+                    carbon: carbonFootprint,
+                    carbonPerKm: info.co2PerKm / info.occupancy
+                };
+            }
+            
+            // Find the fastest and greenest modes
+            let fastestMode = null;
+            let fastestTime = Infinity;
+            let greenestMode = null;
+            let lowestCarbon = Infinity;
+            
+            for (const [mode, info] of Object.entries(times)) {
+                if (info.minutes < fastestTime) {
+                    fastestTime = info.minutes;
+                    fastestMode = mode;
+                }
+                if (info.carbon < lowestCarbon) {
+                    lowestCarbon = info.carbon;
+                    greenestMode = mode;
+                }
+            }
+            
+            times[fastestMode].isFastest = true;
+            times[greenestMode].isGreenest = true;
+            
+            return times;
+        }
+
+        async function getRouteGeometry(order, mode) {
+            const segments = [];
+            const profile = transportModes[mode].profile;
+            
+            // Get route for each segment
+            for (let i = 0; i < order.length - 1; i++) {
+                const start = order[i];
+                const end = order[i + 1];
+                
+                const response = await fetch(
+                    `https://router.project-osrm.org/route/v1/${profile}/` +
+                    `${locations[start].lon},${locations[start].lat};` +
+                    `${locations[end].lon},${locations[end].lat}?overview=full&geometries=geojson`
+                );
+                
+                const data = await response.json();
+                
+                if (data.routes && data.routes.length > 0) {
+                    segments.push({
+                        coordinates: data.routes[0].geometry.coordinates.map(coord => [coord[1], coord[0]])
+                    });
+                }
+            }
+            
+            return segments;
+        }
+
+        function displayResults(order, distance, routeGeometry) {
+            // Display distance
+            distancePara.textContent = `Total Distance: ${(distance / 1000).toFixed(1)} km`;
+            
+            // Display carbon footprint for current mode
+            const carbonInfo = modeTimes[currentMode];
+            carbonPara.textContent = `Carbon Footprint: ${carbonInfo.carbon}g CO₂ (${carbonInfo.carbonPerKm.toFixed(1)}g CO₂/km)`;
+            
+            // Display transport mode options
+            renderTransportModes();
+            
+            // Display all mode times with icons
+            renderAllModeTimes();
+            
+            // Display selected mode and time
+            updateTimeDisplay();
+            
+            // Display optimal order with place names
+            routeOrder.innerHTML = '';
+            order.forEach((locIndex, i) => {
+                const li = document.createElement('li');
+                li.textContent = `${i + 1}. ${locations[locIndex].name}`;
+                routeOrder.appendChild(li);
+            });
+            
+            // Draw route on map
+            drawRoute(routeGeometry);
+            
+            // Show results
+            resultsDiv.style.display = 'block';
+            hideError();
+        }
+
+        function renderTransportModes() {
+            transportModesDiv.innerHTML = '';
+            for (const [mode, info] of Object.entries(modeTimes)) {
+                const modeDiv = document.createElement('div');
+                modeDiv.className = `transport-mode ${mode === currentMode ? 'selected' : ''} ${info.isFastest ? 'best' : ''}`;
+                modeDiv.dataset.mode = mode;
+                modeDiv.innerHTML = `
+                    <svg class="transport-icon"><use href="#${info.icon}"/></svg>
+                    ${info.name}
+                `;
+                modeDiv.addEventListener('click', () => selectTransportMode(mode));
+                transportModesDiv.appendChild(modeDiv);
+            }
+        }
+
+        function renderAllModeTimes() {
+            modeTimesDiv.innerHTML = '';
+            for (const [mode, info] of Object.entries(modeTimes)) {
+                const timeDiv = document.createElement('div');
+                timeDiv.className = 'mode-time';
+                const greenestBadge = info.isGreenest ? '<span class="greenest">(Greenest)</span>' : '';
+                timeDiv.innerHTML = `
+                    <svg class="mode-time-icon"><use href="#${info.icon}"/></svg>
+                    <div>
+                        <strong>${info.name} ${greenestBadge}</strong>
+                        <div>${info.minutes} min</div>
+                        <div class="carbon-info">${info.carbon}g CO₂</div>
+                    </div>
+                `;
+                modeTimesDiv.appendChild(timeDiv);
+            }
+        }
+
+        async function selectTransportMode(mode) {
+            currentMode = mode;
+            
+            // Update UI
+            document.querySelectorAll('.transport-mode').forEach(el => {
+                el.classList.remove('selected');
+            });
+            document.querySelector(`.transport-mode[data-mode="${mode}"]`).classList.add('selected');
+            
+            updateTimeDisplay();
+            
+            // Get new route geometry if needed
+            const routeGeometry = await getRouteGeometry(optimalOrder, mode);
+            
+            // Redraw route
+            drawRoute(routeGeometry);
+        }
+
+        function updateTimeDisplay() {
+            const timeInfo = modeTimes[currentMode];
+            selectedModeSpan.innerHTML = `
+                <svg style="width:24px;height:24px;vertical-align:middle;margin-right:5px;">
+                    <use href="#${timeInfo.icon}"/>
+                </svg>
+                ${timeInfo.name} 
+            `;
+            travelTimeSpan.textContent = `${timeInfo.minutes} min`;
+            
+            if (timeInfo.isFastest) {
+                selectedModeSpan.innerHTML += `<span class="best">(Fastest)</span>`;
+            }
+            if (timeInfo.isGreenest) {
+                selectedModeSpan.innerHTML += `<span class="greenest">(Greenest)</span>`;
+            }
+            
+            // Update carbon info
+            carbonPara.textContent = `Carbon Footprint: ${timeInfo.carbon}g CO₂ (${timeInfo.carbonPerKm.toFixed(1)}g CO₂/km)`;
+        }
+
+        function drawRoute(segments) {
+            if (routeLayers[currentMode]) {
+                map.removeLayer(routeLayers[currentMode]);
+            }
+            
+            routeLayers[currentMode] = L.layerGroup().addTo(map);
+            segments.forEach(segment => {
+                L.polyline(segment.coordinates, {
+                    color: transportModes[currentMode].color,
+                    weight: 5
+                }).addTo(routeLayers[currentMode]);
+            });
+            
+            // Fit map to route
+            const allPoints = segments.flatMap(segment => segment.coordinates);
+            const bounds = L.latLngBounds(allPoints);
+            map.fitBounds(bounds, {padding: [50, 50]});
+        }
+
+        function clearAll() {
+            // Clear arrays
+            locations.length = 0;
+            
+            // Clear markers from map
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+            
+            // Clear routes
+            Object.values(routeLayers).forEach(layer => {
+                if (layer) map.removeLayer(layer);
+            });
+            routeLayers = {};
+            
+            // Reset UI
+            coordinatesList.innerHTML = '';
+            optimizeButton.disabled = true;
+            resultsDiv.style.display = 'none';
+            hideError();
+            
+            // Reset map view
+            map.setView([48.8566, 2.3522], 4);
+        }
+
+        function updateCoordinatesList() {
+            coordinatesList.innerHTML = '';
+            locations.forEach((loc, index) => {
+                const coordDiv = document.createElement('div');
+                coordDiv.innerHTML = `
+                    <span>${loc.lat.toFixed(6)}, ${loc.lon.toFixed(6)}</span>
+                    <button onclick="removeCoordinate(${index})">Remove</button>
+                `;
+                coordinatesList.appendChild(coordDiv);
+            });
+        }
+
+        function removeCoordinate(index) {
+            // Remove from array
+            locations.splice(index, 1);
+            
+            // Remove marker from map
+            map.removeLayer(markers[index]);
+            markers.splice(index, 1);
+            
+            // Update UI
+            updateCoordinatesList();
+            
+            // Update optimize button state
+            optimizeButton.disabled = locations.length < 2;
+            
+            // Clear results if we have less than 2 points
+            if (locations.length < 2) {
+                resultsDiv.style.display = 'none';
+                Object.values(routeLayers).forEach(layer => {
+                    if (layer) map.removeLayer(layer);
+                });
+                routeLayers = {};
+            }
+            
+            // Update map view if we have markers left
+            if (markers.length > 0) {
+                map.fitBounds(markers.map(m => m.getLatLng()));
+            } else {
+                map.setView([48.8566, 2.3522], 4);
+            }
+        }
+
+        function showError(message, isError = true) {
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+            errorDiv.style.backgroundColor = isError ? '#ffebee' : '#e8f5e9';
+            errorDiv.style.color = isError ? '#d32f2f' : '#2e7d32';
+        }
+
+        function hideError() {
+            errorDiv.style.display = 'none';
+        }
+
+        // Make removeCoordinate available globally
+        window.removeCoordinate = removeCoordinate;
+    </script>
+</body>
+</html>

@@ -1,0 +1,326 @@
+/* CarbonFootprint.css */
+.carbon-section {
+  background-color: var(--white);
+  position: relative;
+  overflow: hidden;
+  padding: 4rem 2rem;
+  background-image: linear-gradient(to bottom, rgba(152, 251, 152, 0.05), rgba(255, 255, 255, 1) 20%);
+}
+
+.carbon-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.08"><path fill="%2300a86b" d="M50,10c0,0-15,20-15,35s15,35,15,35s15-20,15-35S50,10,50,10z"/><path fill="%2328a745" d="M30,30c0,0-10,15-10,25s10,25,10,25s10-15,10-25S30,30,30,30z"/><path fill="%235cb85c" d="M70,25c0,0-8,12-8,20s8,20,8,20s8-12,8-20S70,25,70,25z"/></svg>');
+  background-size: 400px;
+  z-index: 0;
+}
+
+.carbon-section h2 {
+  text-align: center;
+  color: #006241; /* Darker green for better contrast */
+  font-size: 2.8rem;
+  margin-bottom: 3rem;
+  position: relative;
+  z-index: 1;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+}
+
+.carbon-section h2::after {
+  content: "🌍";
+  margin-left: 15px;
+}
+
+.carbon-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 3rem;
+  position: relative;
+  z-index: 1;
+}
+
+.pie-chart {
+  flex: 1;
+  min-width: 300px;
+  max-width: 400px;
+  margin: 0 auto;
+  position: relative;
+  transition: transform 0.5s ease;
+  filter: drop-shadow(0 10px 20px rgba(0, 168, 107, 0.2));
+}
+
+.pie-chart:hover {
+  transform: scale(1.05) rotate(-5deg);
+}
+
+.pie {
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%;
+  border-radius: 50%;
+  box-shadow: 0 15px 35px rgba(0, 168, 107, 0.25);
+  transition: all 0.5s ease;
+  position: relative;
+  overflow: hidden;
+  background: conic-gradient(
+    #00a86b 0% 45%,
+    #28a745 0% 70%,
+    #5cb85c 0% 85%,
+    #90ee90 0% 100%
+  );
+}
+
+.pie::after {
+  content: "";
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  right: 10%;
+  bottom: 10%;
+  border-radius: 50%;
+  background-color: white;
+  box-shadow: inset 0 0 15px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #006241;
+  font-weight: bold;
+  font-size: 1.2rem;
+  content: "CO₂";
+}
+
+.carbon-legend {
+  flex: 1;
+  min-width: 300px;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 168, 107, 0.1);
+  transition: all 0.5s ease;
+  border: 1px solid rgba(0, 168, 107, 0.1);
+}
+
+.carbon-legend:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 168, 107, 0.15);
+}
+
+.carbon-legend h3 {
+  color: #006241;
+  margin-bottom: 1.5rem;
+  font-size: 2rem;
+  position: relative;
+  display: inline-block;
+}
+
+.carbon-legend h3::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(to right, #00a86b, #5cb85c);
+  border-radius: 2px;
+}
+
+.carbon-legend ul {
+  list-style: none;
+  margin-bottom: 2rem;
+}
+
+.carbon-legend li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.8rem;
+  border-radius: 8px;
+  transition: all 0.3s;
+  background-color: rgba(220, 255, 220, 0.3);
+}
+
+.carbon-legend li:hover {
+  background-color: rgba(144, 238, 144, 0.4);
+  transform: translateX(5px);
+}
+
+.legend-color {
+  display: inline-block;
+  width: 25px;
+  height: 25px;
+  margin-right: 15px;
+  border-radius: 6px;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.carbon-tip {
+  background-color: rgba(144, 238, 144, 0.3);
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  font-style: italic;
+  position: relative;
+  border-left: 5px solid #28a745;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(5px);
+}
+
+.carbon-tip:hover {
+  transform: scale(1.02);
+  box-shadow: 0 8px 20px rgba(0, 168, 107, 0.15);
+  background-color: rgba(144, 238, 144, 0.4);
+}
+
+.carbon-tip::before {
+  content: "🌿";
+  position: absolute;
+  left: -15px;
+  top: -15px;
+  background-color: white;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  font-size: 1.2rem;
+}
+
+.calculate-button {
+  background: linear-gradient(to right, #00a86b, #5cb85c);
+  color: white;
+  border: none;
+  padding: 1.2rem 2.5rem;
+  font-size: 1.2rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: block;
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  box-shadow: 0 6px 15px rgba(0, 168, 107, 0.4);
+  position: relative;
+  overflow: hidden;
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.calculate-button:hover {
+  background: linear-gradient(to right, #008a5a, #4ca64c);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 10px 25px rgba(0, 168, 107, 0.5);
+}
+
+.calculate-button::after {
+  content: "♻️";
+  position: absolute;
+  right: 25px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1.4rem;
+}
+
+/* Animation classes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes leafFloat {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-15px) rotate(10deg);
+  }
+}
+
+@keyframes leafDrift {
+  0% {
+    transform: translateX(0) rotate(0deg);
+  }
+  100% {
+    transform: translateX(20px) rotate(360deg);
+  }
+}
+
+.animate-on-scroll {
+  opacity: 0;
+}
+
+.animated {
+  animation: fadeInUp 0.8s ease forwards;
+}
+
+.leaf {
+  position: absolute;
+  z-index: 0;
+  font-size: 2rem;
+  pointer-events: none;
+  animation: leafFloat 6s ease-in-out infinite, leafDrift 15s linear infinite;
+  opacity: 0.7;
+  filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1));
+}
+
+/* Add specific leaf positions */
+.leaf:nth-child(1) {
+  top: 10%;
+  left: 5%;
+  animation-delay: 0s;
+  font-size: 2.5rem;
+}
+.leaf:nth-child(2) {
+  top: 20%;
+  right: 8%;
+  animation-delay: 1s;
+}
+.leaf:nth-child(3) {
+  bottom: 15%;
+  left: 7%;
+  animation-delay: 2s;
+  font-size: 3rem;
+}
+.leaf:nth-child(4) {
+  bottom: 25%;
+  right: 10%;
+  animation-delay: 3s;
+}
+.leaf:nth-child(5) {
+  top: 30%;
+  left: 15%;
+  animation-delay: 4s;
+  font-size: 2.2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .carbon-section h2 {
+    font-size: 2.2rem;
+  }
+  
+  .carbon-container {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .pie-chart, .carbon-legend {
+    min-width: 100%;
+  }
+  
+  .leaf {
+    font-size: 1.5rem;
+  }
+}

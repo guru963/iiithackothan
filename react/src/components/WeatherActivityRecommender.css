@@ -1,0 +1,389 @@
+/* WeatherActivityRecommender.css */
+.wa-container {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(to bottom, #f0fff0, #e6ffe6);
+  min-height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+.wa-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.05"><path fill="%2300a86b" d="M50,10c0,0-15,20-15,35s15,35,15,35s15-20,15-35S50,10,50,10z"/><path fill="%2328a745" d="M30,30c0,0-10,15-10,25s10,25,10,25s10-15,10-25S30,30,30,30z"/><path fill="%235cb85c" d="M70,25c0,0-8,12-8,20s8,20,8,20s8-12,8-20S70,25,70,25z"/></svg>');
+  background-size: 300px;
+  z-index: 0;
+}
+
+.wa-header {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(5px);
+  position: relative;
+  z-index: 1;
+}
+
+.wa-header h1 {
+  color: #006241;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.wa-header p {
+  color: #2e8b57;
+  font-size: 1.2rem;
+}
+
+.wa-location-section {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(46, 139, 87, 0.1);
+  position: relative;
+  z-index: 1;
+  border: 1px solid rgba(46, 139, 87, 0.2);
+}
+
+.wa-location-options {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.wa-eco-btn {
+  background: linear-gradient(to right, #00a86b, #5cb85c);
+  color: white;
+  border: none;
+  padding: 0.8rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 4px 10px rgba(0, 168, 107, 0.3);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wa-eco-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0, 168, 107, 0.4);
+}
+
+.wa-eco-btn.active {
+  background: linear-gradient(to right, #008a5a, #4ca64c);
+  box-shadow: inset 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.wa-or-divider {
+  color: #2e8b57;
+  font-weight: bold;
+}
+
+.wa-location-form {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.wa-location-input {
+  flex: 1;
+  min-width: 250px;
+  padding: 0.8rem 1.2rem;
+  border: 2px solid #98fb98;
+  border-radius: 50px;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.wa-location-input:focus {
+  border-color: #00a86b;
+  box-shadow: 0 0 0 3px rgba(0, 168, 107, 0.2);
+}
+
+.wa-location-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.wa-location-header h2 {
+  color: #006241;
+  margin: 0;
+}
+
+.wa-weather-section {
+  max-width: 800px;
+  margin: 2rem auto;
+}
+
+.wa-weather-card {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px rgba(46, 139, 87, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: 1px solid rgba(46, 139, 87, 0.2);
+}
+
+.wa-weather-main {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.wa-weather-main img {
+  width: 80px;
+  height: 80px;
+}
+
+.wa-temp {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #006241;
+  margin: 0;
+}
+
+.wa-description {
+  font-size: 1.2rem;
+  color: #2e8b57;
+  margin: 0;
+  text-transform: capitalize;
+}
+
+.wa-weather-details {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.wa-weather-details p {
+  margin: 0;
+  color: #2e8b57;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.wa-activities-section {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.wa-activities-section h3 {
+  color: #006241;
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 1.8rem;
+  position: relative;
+  display: inline-block;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.wa-activities-section h3::after {
+  content: "";
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(to right, #00a86b, #5cb85c);
+  border-radius: 3px;
+}
+
+.wa-activities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.wa-activity-card {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 15px;
+  padding: 1.5rem;
+  box-shadow: 0 5px 15px rgba(46, 139, 87, 0.1);
+  transition: all 0.3s;
+  border: 1px solid rgba(46, 139, 87, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.wa-activity-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(46, 139, 87, 0.2);
+}
+
+.wa-activity-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: linear-gradient(to bottom, #00a86b, #5cb85c);
+}
+
+.wa-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.wa-time-badge {
+  background: #e6ffe6;
+  color: #006241;
+  padding: 0.3rem 0.8rem;
+  border-radius: 50px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.wa-activity-icon {
+  font-size: 1.8rem;
+}
+
+.wa-activity-card h4 {
+  color: #006241;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.3rem;
+}
+
+.wa-activity-card .wa-location {
+  color: #2e8b57;
+  margin: 0 0 0.8rem 0;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.wa-activity-card .wa-description {
+  color: #333;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.wa-loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 3rem;
+  text-align: center;
+}
+
+.wa-leaf-spinner {
+  width: 60px;
+  height: 60px;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%2300a86b"><path d="M17 8C8 10 5.9 16.8 3 22c5-3 11-5 16-6-2-2-3.5-4.5-3.5-7.5S15 8 17 8z"/></svg>');
+  background-size: contain;
+  background-repeat: no-repeat;
+  animation: wa-leaf-spin 2s linear infinite;
+}
+
+@keyframes wa-leaf-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.wa-error-container, .wa-notice-message {
+  text-align: center;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 15px;
+  max-width: 600px;
+  margin: 2rem auto;
+  box-shadow: 0 5px 15px rgba(46, 139, 87, 0.1);
+}
+
+.wa-error-container h2 {
+  color: #d32f2f;
+}
+
+.wa-footer {
+  text-align: center;
+  padding: 1.5rem;
+  margin-top: 3rem;
+  background: rgba(255, 255, 255, 0.8);
+  position: relative;
+  z-index: 1;
+  color: #2e8b57;
+  font-weight: 600;
+}
+
+/* Leaf animations */
+.wa-leaf {
+  position: absolute;
+  font-size: 2rem;
+  z-index: 0;
+  opacity: 0.6;
+  animation: wa-leaf-float 8s ease-in-out infinite;
+  filter: drop-shadow(0 3px 5px rgba(0,0,0,0.1));
+  pointer-events: none;
+}
+
+@keyframes wa-leaf-float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-30px) rotate(10deg); }
+}
+
+.wa-leaf-1 { top: 10%; left: 5%; animation-delay: 0s; }
+.wa-leaf-2 { top: 20%; right: 10%; animation-delay: 2s; }
+.wa-leaf-3 { bottom: 15%; left: 8%; animation-delay: 4s; }
+.wa-leaf-4 { bottom: 25%; right: 7%; animation-delay: 6s; }
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .wa-location-options {
+    flex-direction: column;
+  }
+  
+  .wa-or-divider {
+    display: none;
+  }
+  
+  .wa-location-form {
+    flex-direction: column;
+  }
+  
+  .wa-location-input {
+    width: 100%;
+  }
+  
+  .wa-weather-main {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .wa-activities-grid {
+    grid-template-columns: 1fr;
+  }
+}

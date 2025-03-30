@@ -1,0 +1,32 @@
+.transport-section {
+    background-color: var(--light-gray);
+  }
+  
+  .transport-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+  
+  .transport-card {
+    background-color: var(--white);
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .transport-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+  }
+  
+  .transport-card h3 {
+    color: var(--primary-green);
+    margin-bottom: 1.5rem;
+  }
+  
+  .transport-details p {
+    margin: 0.5rem 0;
+    color: var(--dark-gray);
+  }

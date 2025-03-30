@@ -1,0 +1,90 @@
+.hotels-section {
+    background-color: var(--light-gray);
+  }
+  
+  .hotels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+  }
+  
+  .hotel-card {
+    background-color: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+  }
+  
+  .hotel-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .hotel-image {
+    position: relative;
+    height: 200px;
+  }
+  
+  .hotel-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  
+  .rating {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 0.3rem 0.6rem;
+    border-radius: 20px;
+    font-weight: bold;
+    color: var(--dark-green);
+  }
+  
+  .hotel-info {
+    padding: 1.5rem;
+  }
+  
+  .hotel-info h3 {
+    color: var(--dark-green);
+    margin-bottom: 0.5rem;
+  }
+  
+  .location {
+    color: var(--dark-gray);
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .price {
+    font-weight: bold;
+    color: var(--primary-green);
+    margin-bottom: 1rem;
+  }
+  
+  .features {
+    list-style: none;
+    margin-bottom: 1.5rem;
+  }
+  
+  .features li {
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--dark-gray);
+  }
+  
+  .book-button {
+    width: 100%;
+    padding: 0.8rem;
+    background-color: var(--primary-green);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .book-button:hover {
+    background-color: var(--dark-green);
+  }
