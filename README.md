@@ -83,7 +83,10 @@ npm install
 npm install react-router-dom
 npm install firebase @google/generative-ai axios
 npm run dev
-
+```
 
 Our Video Links
 [Click here](https://drive.google.com/file/d/1n5QjBRQqJyEld4Y4G98IQYdY-i6cTZq6/view?usp=sharing)
+
+Our PPT
+[Click here](https://www.canva.com/design/DAGjME6wKeM/2ngSnIe-p7yQi9WFgfx3rQ/edit?utm_content=DAGjME6wKeM&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
