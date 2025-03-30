@@ -76,14 +76,14 @@ ECO BUDDY is an AI-powered **eco-travel assistant** that helps travelers make **
 1️⃣ **Install Node.js (v16+)** - [Download Here](https://nodejs.org/)  
 
 2️⃣ **Clone the Repository**  
-```
+```bash
 git clone https://github.com/iiithackothan.git
 cd react
 npm install
 npm install react-router-dom
 npm install firebase @google/generative-ai axios
-npm run dev```
+npm run dev
+
 
 Our Video Links
-https://drive.google.com/file/d/19IiIbwk1G4SCo1JVKLrz1yHR08Mz9squ/view?usp=sharing
-https://drive.google.com/file/d/1hLXYSnYhpdftoz78fe85HlV-y9i0l7zf/view?usp=sharing
+[Click here](https://drive.google.com/file/d/1n5QjBRQqJyEld4Y4G98IQYdY-i6cTZq6/view?usp=sharing)
