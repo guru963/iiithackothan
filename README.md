@@ -1,68 +1,89 @@
-# ECO BUDDY - The Eco Travel Planner App
+# 🌍 ECO BUDDY - The Eco Travel Planner App  
 
+### 🚀 Hackathon Project by:  
+👤 **Guru Divya Darshini U**  
+👤 **Srinithi A**  
+👤 **Yalini Madan**  
+👤 **Navanthiga J M**  
 
+---
 
-## The Problem Statement:
--Rapid growth in tourism is impacting the environment negatively.
--Limited tools exist to guide travelers in reducing their carbon footprint and travelling in a eco friendly way.
--Lack of focus on eco-friendly accommodations, activities, and travel planning.
+## 🌎 The Problem Statement  
 
+❌ **Negative Environmental Impact**: Rapid growth in tourism is harming ecosystems.  
+❌ **Lack of Eco-Friendly Tools**: Limited platforms help travelers reduce their carbon footprint.  
+❌ **Missing Green Travel Planning**: No focus on sustainable stays, activities, and route optimization.  
 
-## Team Member Names: 
-1. Guru Divya Darshini U
-2. Srinithi A
-3. Yalini Madan
-4. Navanthiga J M
+---
 
+## ✅ The Solution - ECO BUDDY  
 
-## The Solution Overview:
+ECO BUDDY is an AI-powered **eco-travel assistant** that helps travelers make **sustainable choices** while exploring destinations responsibly.  
 
-ECO BUDDY is an eco-friendly travel assistant that:
--Helps travelers make sustainable choices.
--Provides tools to minimize their environmental impact.
--Enhances the travel experience with innovative features like augmented reality and optimized routes.
+🔹 **Minimizes environmental impact** 🌿  
+🔹 **Enhances travel experience** 🚀  
+🔹 **Provides AI-driven eco-friendly recommendations** 🧠  
 
-### 🗺️ Smart Destination Explorer
-- Browse the best tourist spots available in a destination
-- View pictures and images of the inside view of the places
-- Select and save the places to visit and have a custom itenary 
+---
 
-### 🚗 Carbon-Conscious Route Optimizer
-- Plans the most efficient visiting order for selected places
-- Minimizes travel distance between locations
-- Calculates estimated carbon savings vs. random route
+## 🌟 Key Features  
 
-### ⛅ Weather-Adaptive Activities
-- Recommends eco-adventures based on:
-  - Current location weather
-  - or Manually entered destination forecast
-  -Gives the specific location where the eco adventure can be done
-  
-### 🏡 Eco-Stay Finder
-- Recommends green-certified accommodation
+### 🗺️ **Smart Destination Explorer**  
+✅ Discover top tourist spots at your destination  
+✅ View 3D virtual tours & images 🌍  
+✅ Save places & create a **custom itinerary** 📌  
 
-### 🎒 Smart Packing Guide
-- Weather-appropriate packing suggestions
-- Eco-friendly product recommendations
-- Zero-waste travel checklist
+### 🚗 **Carbon-Conscious Route Optimizer**  
+✅ Plans the most fuel-efficient visit order ⛽  
+✅ Reduces travel distance between locations 🛣️  
+✅ Shows **carbon savings** vs. random routes 🌱  
 
-## Tech Stack
+### ⛅ **Weather-Adaptive Eco-Adventures**  
+✅ AI-based recommendations for:  
+   - 🌞 Current weather-based activities  
+   - 🌏 Specific eco-tourism locations  
+✅ Filters based on manual destination search  
 
-- **Frontend**: React.js, CSS
-- **APIs**:
-  - Google Gemini (AI recommendations)
-  - OpenWeather API (weather data)
-  - Google API
-  - Open Street Map
-- **Styling**: CSS with eco-friendly color palette
-- **Geolocation**: Browser Geolocation API
+### 🏡 **Eco-Stay Finder**  
+✅ Recommends **green-certified** accommodations 🌿  
 
-### Prerequisites
-- Node.js (v16+)
-- API keys for
-  - OpenWeather API
-  - Google API
-  - Gemini API
- -OpenStreetMap
+### 🎒 **Smart Packing Guide**  
+✅ **Weather-appropriate** packing suggestions 🌡️  
+✅ Eco-friendly product recommendations ♻️  
+✅ Zero-waste **travel checklist** ✅  
 
- 
+---
+
+## 🛠️ Tech Stack  
+
+**🔹 Frontend**: React.js, Vite, CSS  
+**🔹 Backend**: Firebase 🔥  
+**🔹 APIs Used**:  
+   - 🤖 **Google Gemini** (AI-based recommendations)  
+   - 🌦️ **OpenWeather API** (Real-time weather data)  
+   - 📍 **Google Places API** (Tourist spot details)  
+   - 🗺️ **OpenStreetMap API** (Free & open-source mapping)  
+
+**🔹 Styling**: CSS (Eco-friendly green theme)  
+**🔹 Geolocation**: Browser Geolocation API 🌍  
+
+---
+
+## ⚙️ Getting Started  
+
+### 🖥️ **Project Setup with Vite + React**  
+
+1️⃣ **Install Node.js (v16+)** - [Download Here](https://nodejs.org/)  
+
+2️⃣ **Clone the Repository**  
+```
+git clone https://github.com/iiithackothan.git
+cd react
+npm install
+npm install react-router-dom
+npm install firebase @google/generative-ai axios
+npm run dev```
+
+Our Video Links
+https://drive.google.com/file/d/19IiIbwk1G4SCo1JVKLrz1yHR08Mz9squ/view?usp=sharing
+https://drive.google.com/file/d/1hLXYSnYhpdftoz78fe85HlV-y9i0l7zf/view?usp=sharing
